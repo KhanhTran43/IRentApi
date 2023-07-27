@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.Entity
 {
-    public class Role : EntityBase<long>
+    public class Role : EntityBase
     {
         public string Name { get; set; }
+        public long UserId { get; set; }
+
+        public virtual User User { get; set; }
     }
 }
