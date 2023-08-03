@@ -1,4 +1,5 @@
 using Data.Context;
+using iRentApi.Helpers;
 using iRentApi.Service.Contract;
 using iRentApi.Service.Implement;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddControllers().AddJsonOptions(options => 
 { 
     //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;

@@ -4,6 +4,7 @@ using iRentApi.DTO.Contract;
 using iRentApi.Model.Entity.Contract;
 using iRentApi.Service.ServiceException;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -14,8 +15,7 @@ namespace iRentApi.Service.Contract
         public IEnumerable<string>? Includes { get; set; }
     }
 
-    public interface IEntityCRUDService
-        <TEntity> : IService 
+    public interface IEntityCRUDService<TEntity> : IService 
         where TEntity : EntityBase
     {
         public async Task<List<TEntity>> SelectAll(SelectOptions? options = null)
@@ -89,7 +89,7 @@ namespace iRentApi.Service.Contract
             }
         }
 
-        public async Task Insert(IInsertDTO<TEntity> insert)
+        public async Task<TEntity> Insert(IInsertDTO<TEntity> insert)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -97,8 +97,10 @@ namespace iRentApi.Service.Contract
             }
 
             var entity = Mapper.Map<TEntity>(insert);
-            Context.Set<TEntity>().Add(entity);
+            var entityEntry = Context.Set<TEntity>().Add(entity);
             await Context.SaveChangesAsync();
+
+            return entityEntry.Entity;
         }
 
         public async Task Update(IUpdateDTO<TEntity> update)
