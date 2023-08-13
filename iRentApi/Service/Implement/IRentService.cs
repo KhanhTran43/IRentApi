@@ -2,24 +2,28 @@
 using Data.Context;
 using Domain.Model.Entity;
 using iRentApi.DTO;
+using iRentApi.Helpers;
 using iRentApi.Service.Contract;
+using Microsoft.Extensions.Options;
 using System.Drawing;
 
 namespace iRentApi.Service.Implement
 {
     public abstract class IRentService : IService
     {
-        private readonly IRentContext _context;
-        private readonly IMapper _mapper;
+        private IRentContext _context;
+        private IMapper _mapper;
+        private AppSettings _appSettings;
 
-        IRentContext IService.Context => _context;
+        public IRentContext Context => _context;
+        public IMapper Mapper => _mapper;
+        public AppSettings AppSettings => _appSettings;
 
-        IMapper IService.Mapper => _mapper;
-
-        protected IRentService(IRentContext context, IMapper mapper)
+        protected IRentService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
 
     }

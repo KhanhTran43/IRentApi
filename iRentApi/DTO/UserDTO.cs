@@ -17,6 +17,6 @@ namespace iRentApi.DTO
         [Phone]
         public string PhoneNumber { get; set; }
 
-        public ICollection<RoleDTO> Roles { get; set; }
+        public ICollection<RoleDTO>? Roles { get; set; }
     }
 }

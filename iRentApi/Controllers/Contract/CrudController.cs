@@ -3,6 +3,7 @@ using iRentApi.Model.Entity.Contract;
 using iRentApi.Service.Contract;
 using iRentApi.Service.ServiceException;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace iRentApi.Controllers.Contract
 {
@@ -26,6 +27,40 @@ namespace iRentApi.Controllers.Contract
             catch (EntitySetEmptyException)
             {
                 return NotFoundResult();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TSelect>> Get([FromRoute] long id,[FromQuery] SelectOptions options)
+        {
+            try
+            {
+                return await Service.EntityService<TEntity>().SelectByID<TSelect>(id, options);
+            }
+            catch (EntitySetEmptyException)
+            {
+                return NotFoundResult();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<TEntity>> Add(TInsert insert)
+        {
+            var service = Service.EntityService<TEntity>();
+
+            if (service == null)
+            {
+                return Problem("Entity set 'IRentContext.Users'  is null.");
+            }
+
+            try
+            {
+                var entity = await service.Insert(insert);
+                return CreatedAtAction("Get", new { id = entity.Id }, entity);
+            }
+            catch(Exception e)
+            {
+                return Problem(e.Message);
             }
         }
     }
