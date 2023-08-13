@@ -1,4 +1,5 @@
 ﻿using Domain.Model;
+using iRentApi.Model.Entity;
 using iRentApi.Model.Entity.Contract;
 using System;
 using System.Collections.Generic;
@@ -26,5 +27,6 @@ namespace Domain.Model.Entity
         public string? RefreshToken { get; set; }
 
         public ICollection<Role> Roles { get; set; }
+        public ICollection<Warehouse> Warehouses { get; set; }
     }
 }

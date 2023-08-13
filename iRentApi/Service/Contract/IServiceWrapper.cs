@@ -8,6 +8,7 @@ namespace iRentApi.Service.Contract
     {
         IUserService UserService { get; }
         IAuthService AuthService { get; }
+        IWarehouseService WarehouseService { get; }
 
         public IEntityCRUDService<TEntity> EntityService<TEntity>()
             where TEntity : EntityBase;

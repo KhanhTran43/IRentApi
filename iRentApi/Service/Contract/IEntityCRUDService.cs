@@ -55,7 +55,7 @@ namespace iRentApi.Service.Contract
 
             var query = Context.Set<TEntity>().AsQueryable();
 
-            if (options != null)
+            if (options?.Includes != null)
             {
                 foreach (var navigationPath in options.Includes)
                 {

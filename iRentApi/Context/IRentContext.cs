@@ -1,4 +1,5 @@
 ﻿using Domain.Model.Entity;
+using iRentApi.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,7 @@ namespace Data.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Warehouse> Warehouses { get; set; }
     }
 }
