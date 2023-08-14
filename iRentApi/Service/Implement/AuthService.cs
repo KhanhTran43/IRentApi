@@ -28,7 +28,7 @@ namespace iRentApi.Service.Implement
             {
                 var user = await Context.Users.Where(user => user.Email == email && user.Password == password).SingleAsync();
 
-                var jwtToken = GenerateJwtToken(user);
+                var jwtToken = GenerateAccessToken(user);
                 var refreshToken = GenerateRefreshToken(user);
 
                 user.RefreshToken = refreshToken;
@@ -44,69 +44,86 @@ namespace iRentApi.Service.Implement
             }
         }
 
-        public AuthenticateResponse? RefreshToken(long id, string token)
+        public AuthenticateResponse? RefreshToken(string token)
         {
             var user = Context.Users.SingleOrDefault(u => u.RefreshToken == token);
 
-            if (user == null || user.Id != id) return null;
+            if (user == null) return null;
 
-            var refreshToken = ValidateToken(id, token);
+            var refreshToken = ValidateToken(token);
 
             // return null if token is no longer active
             if (refreshToken ==  null) return null;
 
+            var userIdFromToken = refreshToken.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+
+            // return null if the id not match
+            if (userIdFromToken == null || user.Id != long.Parse(userIdFromToken)) return null;
+
             // generate new jwt
-            var jwtToken = GenerateJwtToken(user);
+            var jwtToken = GenerateAccessToken(user);
 
             return new AuthenticateResponse(user, jwtToken, null);
         }
 
-        private string GenerateJwtToken(User user)
+        private string GenerateAccessToken(User user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return GenerateJwtToken(tokenDescriptor);
         }
 
         private string GenerateRefreshToken(User user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
                 }),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddYears(1),
             };
+            return GenerateJwtToken(tokenDescriptor);
+        }
+
+        private string GenerateJwtToken(SecurityTokenDescriptor tokenDescriptor)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
+            tokenDescriptor.SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
-        private JwtSecurityToken? ValidateToken(long userId, string token)
+        private JwtSecurityToken? ValidateToken(string token)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            try
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-            }, out SecurityToken validatedToken);
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            return jwtToken;
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                }, out SecurityToken validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                return jwtToken;
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e);
+                return null;
+            }
         }
     }
 }

@@ -31,17 +31,16 @@ namespace iRentApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("refresh-token/{id}")]
-        public IActionResult RefreshToken([FromRoute] long id)
+        [HttpPost("refresh-token")]
+        public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
             if(refreshToken != null)
             {
-                var response = Service.AuthService.RefreshToken(id, refreshToken);
+                var response = Service.AuthService.RefreshToken(refreshToken);
 
                 if(response == null) return BadRequest("Invalid refresh token");
 
-                SetTokenCookie(response.RefreshToken);
                 return Ok(response);
             } else
             {
