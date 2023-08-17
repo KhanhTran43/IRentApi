@@ -9,6 +9,11 @@ namespace iRentApi.Service.Contract
         IUserService UserService { get; }
         IAuthService AuthService { get; }
         IWarehouseService WarehouseService { get; }
+        ICommentService CommentService { get; }
+        IContractService ContractService { get; }
+        IPostService PostService { get; }
+        IRentedWarehouseService RentedWarehouseService { get; }
+
 
         public IEntityCRUDService<TEntity> EntityService<TEntity>()
             where TEntity : EntityBase;
