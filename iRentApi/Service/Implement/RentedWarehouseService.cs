@@ -2,6 +2,7 @@
 using Data.Context;
 using iRentApi.Helpers;
 using iRentApi.Service.Contract;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Implement
@@ -10,6 +11,12 @@ namespace iRentApi.Service.Implement
     {
         public RentedWarehouseService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
+        }
+
+        public Task<bool> CheckWarehouseRented(long warehouseId)
+        {
+            DateTime now = DateTime.Now;
+            return this.Context.RentedWarehouses.Where(rw => warehouseId == rw.WareHouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();
         }
     }
 }

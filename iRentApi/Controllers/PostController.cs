@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PostController : CrudController<Post, PostDTO, PostDTO, PostDTO>
     {
         public PostController(IServiceWrapper serviceWrapper) : base(serviceWrapper)

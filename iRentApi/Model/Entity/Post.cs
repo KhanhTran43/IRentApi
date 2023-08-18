@@ -4,7 +4,8 @@ namespace iRentApi.Model.Entity
 {
     public class Post : EntityBase
     {
-        public long WareHouseId { get; set; }
+        public long WarehouseId { get; set; }
+        public Warehouse Warehouse { get; set; }
         public string Header { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }

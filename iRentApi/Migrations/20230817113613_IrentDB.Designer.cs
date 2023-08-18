@@ -4,6 +4,7 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace iRentApi.Migrations
 {
     [DbContext(typeof(IRentContext))]
-    partial class IRentContextModelSnapshot : ModelSnapshot
+    [Migration("20230817113613_IrentDB")]
+    partial class IrentDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,11 +190,14 @@ namespace iRentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("RentedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("OwnerId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("RenterId")
                         .HasColumnType("bigint");
@@ -201,6 +206,8 @@ namespace iRentApi.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("RenterId");
 
@@ -304,6 +311,10 @@ namespace iRentApi.Migrations
 
             modelBuilder.Entity("iRentApi.Model.Entity.RentedWarehouse", b =>
                 {
+                    b.HasOne("Domain.Model.Entity.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
                     b.HasOne("Domain.Model.Entity.User", "Renter")
                         .WithMany()
                         .HasForeignKey("RenterId");
@@ -313,6 +324,8 @@ namespace iRentApi.Migrations
                         .HasForeignKey("WareHouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Owner");
 
                     b.Navigation("Renter");
 

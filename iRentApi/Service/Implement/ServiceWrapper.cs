@@ -16,19 +16,33 @@ namespace iRentApi.Service.Implement
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
         private readonly IWarehouseService _warehouseService;
+        private readonly ICommentService _commentService;
+        private readonly IContractService _contractService;
+        private readonly IPostService _postService;
+        private readonly IRentedWarehouseService _rentedWarehouseService;
 
         public ServiceWrapper(IRentContext context, IMapper mapper, IOptions<AppSettings> options)
         {
             _userService = new UserService(context, mapper, options);
             _authService = new AuthService(context, mapper, options);
             _warehouseService = new WarehouseService(context, mapper, options);
+            _commentService = new CommentService(context, mapper, options);
+            _contractService = new ContractService(context, mapper, options);
+            _postService = new PostService(context, mapper, options);
+            _rentedWarehouseService = new RentedWarehouseService(context, mapper, options);
         }
 
         public IUserService UserService => _userService;
         public IAuthService AuthService => _authService;
         public IWarehouseService WarehouseService => _warehouseService;
 
-        IUserService IServiceWrapper.UserService => throw new NotImplementedException();
+        public ICommentService CommentService => _commentService;
+
+        public IContractService ContractService => _contractService;
+
+        public IPostService PostService => _postService;
+
+        public IRentedWarehouseService RentedWarehouseService => _rentedWarehouseService;
 
         public IEntityCRUDService<TEntity> EntityService<TEntity>() 
             where TEntity : EntityBase 

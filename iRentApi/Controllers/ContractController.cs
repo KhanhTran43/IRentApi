@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ContractController : CrudController<ContractModel, ContractDTO, ContractDTO, ContractDTO>
     {
         public ContractController(IServiceWrapper serviceWrapper) : base(serviceWrapper) { }

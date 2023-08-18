@@ -14,7 +14,6 @@ namespace Domain.Model.Entity
     {
         public string Name { get; set; }
         public long UserId { get; set; }
-
         public virtual User User { get; set; }
     }
 }

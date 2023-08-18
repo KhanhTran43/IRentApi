@@ -5,8 +5,8 @@ namespace iRentApi.Model.Entity
 {
     public class Warehouse : EntityBase
     {
-        public long UserId { get; set; }
-        public User User { get; set; }
+        public long? UserId { get; set; }
+        public User? User { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public decimal Price { get; set; }

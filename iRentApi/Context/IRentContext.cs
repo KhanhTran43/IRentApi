@@ -21,7 +21,7 @@ namespace Data.Context
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ContractModel> Contracts { get; set; }
-        public DbSet<RentedWarehouse> Warehouse { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<RentedWarehouse> RentedWarehouses { get; set; }
     }
 }
