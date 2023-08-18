@@ -14,5 +14,11 @@ namespace iRentApi.Controllers
         public WarehouseController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
         {
         }
+
+        [HttpGet("user/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetOwnWarehouse([FromQuery] SelectOptions? options, [FromRoute(Name = "id")] long userId)
+        {
+            return await Service.WarehouseService.GetOwnWarehouseList(userId, options);
+        }
     }
 }

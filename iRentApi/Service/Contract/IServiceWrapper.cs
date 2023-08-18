@@ -15,7 +15,7 @@ namespace iRentApi.Service.Contract
         IRentedWarehouseService RentedWarehouseService { get; }
 
 
-        public IEntityCRUDService<TEntity> EntityService<TEntity>()
+        public IRentCRUDService<TEntity> EntityService<TEntity>()
             where TEntity : EntityBase;
     }
 }

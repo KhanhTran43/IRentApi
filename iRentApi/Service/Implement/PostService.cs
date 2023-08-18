@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Implement
 {
-    public class PostService : IRentService, IPostService
+    public class PostService : IPostService
     {
         public PostService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {

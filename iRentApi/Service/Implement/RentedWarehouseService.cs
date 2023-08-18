@@ -7,13 +7,13 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Implement
 {
-    public class RentedWarehouseService : IRentService, IRentedWarehouseService
+    public class RentedWarehouseService : IRentedWarehouseService
     {
         public RentedWarehouseService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
         }
 
-        public Task<bool> CheckWarehouseRented(long warehouseId)
+        public override Task<bool> CheckWarehouseRented(long warehouseId)
         {
             DateTime now = DateTime.Now;
             return this.Context.RentedWarehouses.Where(rw => warehouseId == rw.WareHouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();

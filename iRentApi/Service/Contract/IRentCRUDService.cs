@@ -1,12 +1,13 @@
-﻿using Data.Context;
-using Domain.Model.Entity;
+﻿using AutoMapper;
+using Data.Context;
 using iRentApi.DTO.Contract;
+using iRentApi.Helpers;
 using iRentApi.Model.Entity.Contract;
+using iRentApi.Service.Implement;
 using iRentApi.Service.ServiceException;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Collections.Generic;
-using System.Reflection;
+using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
 
 namespace iRentApi.Service.Contract
 {
@@ -15,10 +16,13 @@ namespace iRentApi.Service.Contract
         public IEnumerable<string>? Includes { get; set; }
     }
 
-    public interface IEntityCRUDService<TEntity> : IService 
-        where TEntity : EntityBase
+    public abstract class IRentCRUDService<TEntity> : IRentService where TEntity : EntityBase
     {
-        public async Task<List<TEntity>> SelectAll(SelectOptions? options = null)
+        protected IRentCRUDService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
+        {
+        }
+
+        public async Task<List<TEntity>> SelectAll(SelectOptions? options = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -38,12 +42,14 @@ namespace iRentApi.Service.Contract
                 }
             }
 
+            if (wherePredicate != null) query = query.Where(wherePredicate);
+
             return await query.ToListAsync();
         }
 
-        public async Task<List<TSelect>> SelectAll<TSelect>(SelectOptions? options = null)
+        public async Task<List<TSelect>> SelectAll<TSelect>(SelectOptions? options = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
-            return Mapper.Map<List<TSelect>>(await SelectAll(options));
+            return Mapper.Map<List<TSelect>>(await SelectAll(options, wherePredicate));
         }
 
         public async Task<TEntity> SelectByID(long key, SelectOptions? options = null)

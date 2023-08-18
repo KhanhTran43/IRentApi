@@ -44,7 +44,7 @@ namespace iRentApi.Service.Implement
 
         public IRentedWarehouseService RentedWarehouseService => _rentedWarehouseService;
 
-        public IEntityCRUDService<TEntity> EntityService<TEntity>() 
+        public IRentCRUDService<TEntity> EntityService<TEntity>() 
             where TEntity : EntityBase 
         {
             var properties = this.GetType().GetProperties();
@@ -52,11 +52,11 @@ namespace iRentApi.Service.Implement
             PropertyInfo? servicePropertyInfo = properties.FirstOrDefault(p =>
             {
                 var propertyType = p.PropertyType;
-                var entityCrudServiceInterfaceType = propertyType.GetInterface("IEntityCRUDService`1");
+                var entityCrudServiceBaseType = propertyType.BaseType;
 
-                if(entityCrudServiceInterfaceType != null)
+                if(entityCrudServiceBaseType != null && entityCrudServiceBaseType.Equals(typeof(IRentCRUDService<TEntity>)))
                 {
-                    Type[] genericArgumentTypes = entityCrudServiceInterfaceType.GetGenericArguments();
+                    Type[] genericArgumentTypes = entityCrudServiceBaseType.GetGenericArguments();
                     Type entityType = typeof(TEntity);
                     Type entityGenericArgumentType = genericArgumentTypes[0];
                     bool result = entityType == entityGenericArgumentType;
@@ -65,7 +65,7 @@ namespace iRentApi.Service.Implement
 
                 return false;
             });
-            if (servicePropertyInfo != null) return (IEntityCRUDService<TEntity>)servicePropertyInfo.GetValue(this);
+            if (servicePropertyInfo != null) return (IRentCRUDService<TEntity>)servicePropertyInfo.GetValue(this);
             else throw new Exception($"Service of type {typeof(TEntity).Name} does not exist");
         }
 

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Implement
 {
-    public class ContractService : IRentService, IContractService
+    public class ContractService : IContractService
     {
         public ContractService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {

@@ -16,13 +16,13 @@ using System.Text;
 
 namespace iRentApi.Service.Implement
 {
-    public class AuthService : IRentService, IAuthService
+    public class AuthService : IAuthService
     {
         public AuthService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
         }
 
-        public async Task<AuthenticateResponse?> Login(string email, string password)
+        public override async Task<AuthenticateResponse?> Login(string email, string password)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace iRentApi.Service.Implement
             }
         }
 
-        public AuthenticateResponse? RefreshToken(string token)
+        public override AuthenticateResponse? RefreshToken(string token)
         {
             var user = Context.Users.SingleOrDefault(u => u.RefreshToken == token);
 

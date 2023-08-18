@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Implement
 {
-    public class UserService : IRentService, IUserService
+    public class UserService : IUserService
     {
         public UserService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
