@@ -16,7 +16,7 @@ namespace iRentApi.Service.Implement
         public override Task<bool> CheckWarehouseRented(long warehouseId)
         {
             DateTime now = DateTime.Now;
-            return this.Context.RentedWarehouses.Where(rw => warehouseId == rw.WareHouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();
+            return this.Context.RentedWarehouses.Where(rw => warehouseId == rw.WarehouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();
         }
     }
 }

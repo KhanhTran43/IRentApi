@@ -8,11 +8,9 @@ namespace iRentApi.Model.Entity
     public class RentedWarehouse : EntityBase
     {
         public long? RenterId { get; set; }
-        [ForeignKey("RenterId")]
         public User? Renter { get; set; }
-        public long WareHouseId { get; set; }
-        [ForeignKey("WareHouseId")]
-        public Warehouse WareHouse { get; set; }
+        public long WarehouseId { get; set; }
+        public Warehouse Warehouse { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime EndDate { get; set; }
     }

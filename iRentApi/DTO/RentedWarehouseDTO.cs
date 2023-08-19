@@ -7,7 +7,7 @@ namespace iRentApi.DTO
     {
         public long Id { get; set; }
         public long RenterId { get; set; }
-        public long WareHouseId { get; set; }
+        public long WarehouseId { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime EndDate { get; set; }
     }
