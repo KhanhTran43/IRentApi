@@ -15,6 +15,7 @@ namespace iRentApi.Service.Contract
         }
 
         public abstract Task<AuthenticateResponse?> Login(string email, string password);
-        public abstract AuthenticateResponse? RefreshToken(string token);
+        public abstract Task<AuthenticateResponse?> RefreshToken(string token);
+        public abstract Task RevokeToken(string refreshToken);
     }
 }

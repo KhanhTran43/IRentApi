@@ -7,6 +7,7 @@ using iRentApi.Service.Contract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -44,9 +45,9 @@ namespace iRentApi.Service.Implement
             }
         }
 
-        public override AuthenticateResponse? RefreshToken(string token)
+        public override async Task<AuthenticateResponse?> RefreshToken(string token)
         {
-            var user = Context.Users.SingleOrDefault(u => u.RefreshToken == token);
+            var user = await Context.Users.SingleOrDefaultAsync(u => u.RefreshToken == token);
 
             if (user == null) return null;
 
@@ -64,6 +65,17 @@ namespace iRentApi.Service.Implement
             var jwtToken = GenerateAccessToken(user);
 
             return new AuthenticateResponse(user, jwtToken, null);
+        }
+
+        public override async Task RevokeToken(string refreshToken)
+        {
+            var user = await Context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user == null) return;
+
+            user.RefreshToken = null;
+
+            Context.SaveChanges();
         }
 
         private string GenerateAccessToken(User user)

@@ -4,6 +4,7 @@ using iRentApi.Service.Contract;
 using iRentApi.Service.Implement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 
 namespace iRentApi.Controllers
 {
@@ -19,7 +20,7 @@ namespace iRentApi.Controllers
         public async Task<IActionResult> Login(LoginInfo loginInfo)
         {
             if (loginInfo != null) {
-                var response =  await Service.AuthService.Login(loginInfo.Email, loginInfo.Password);
+                var response = await Service.AuthService.Login(loginInfo.Email, loginInfo.Password);
 
                 if (response == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
@@ -32,14 +33,14 @@ namespace iRentApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("refresh-token")]
-        public IActionResult RefreshToken()
+        public async Task<IActionResult> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            if(refreshToken != null)
+            if (refreshToken != null)
             {
-                var response = Service.AuthService.RefreshToken(refreshToken);
+                var response = await Service.AuthService.RefreshToken(refreshToken);
 
-                if(response == null) return BadRequest("Invalid refresh token");
+                if (response == null) return BadRequest("Invalid refresh token");
 
                 return Ok(response);
             } else
@@ -48,12 +49,42 @@ namespace iRentApi.Controllers
             }
         }
 
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (refreshToken != null)
+            {
+                await Service.AuthService.RevokeToken(refreshToken);
+
+                RemoveTokenCookie();
+
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest("Invalid refresh token");
+            }
+        }
+
+        private void RemoveTokenCookie()
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(-1),
+                SameSite = SameSiteMode.None,
+                Secure = true
+            };
+            Response.Cookies.Append("refreshToken", "", cookieOptions);
+        }
+
         private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddYears(100),
                 SameSite = SameSiteMode.None,
                 Secure = true
             };
