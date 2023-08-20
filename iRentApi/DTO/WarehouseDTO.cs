@@ -14,6 +14,6 @@ namespace iRentApi.DTO
         public bool Rented { get; set; }
         public decimal Area { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public RentedInfo? RentedInfo { get; set; }
     }
 }

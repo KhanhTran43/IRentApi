@@ -22,7 +22,8 @@ namespace iRentApi.Controllers.Contract
         {
             try
             {
-                return await Service.EntityService<TEntity>().SelectAll<TSelect>(options);
+                var entities = await Service.EntityService<TEntity>().SelectAll<TSelect>(options);
+                return entities;
             }
             catch (EntitySetEmptyException)
             {

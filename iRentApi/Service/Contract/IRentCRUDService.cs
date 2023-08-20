@@ -44,7 +44,9 @@ namespace iRentApi.Service.Contract
 
             if (wherePredicate != null) query = query.Where(wherePredicate);
 
-            return await query.ToListAsync();
+            var result = await query.ToListAsync();
+
+            return result;
         }
 
         public async Task<List<TSelect>> SelectAll<TSelect>(SelectOptions? options = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
