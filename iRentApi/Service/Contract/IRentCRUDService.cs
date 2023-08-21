@@ -18,6 +18,8 @@ namespace iRentApi.Service.Contract
 
     public abstract class IRentCRUDService<TEntity> : IRentService where TEntity : EntityBase
     {
+        public SelectOptions DefaultSelectOptions { get; set; }
+
         protected IRentCRUDService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
         }
@@ -31,16 +33,7 @@ namespace iRentApi.Service.Contract
 
             var query = Context.Set<TEntity>().AsNoTracking();
 
-            if (options?.Includes != null)
-            {
-                foreach (var navigationPath in options.Includes)
-                {
-                    if (typeof(TEntity).GetProperty(navigationPath) != null)
-                    {
-                        query = query.Include(navigationPath);
-                    }
-                }
-            }
+            query = HandleIncludes(query, options);
 
             if (wherePredicate != null) query = query.Where(wherePredicate);
 
@@ -61,15 +54,9 @@ namespace iRentApi.Service.Contract
                 throw new EntitySetEmptyException();
             }
 
-            var query = Context.Set<TEntity>().AsQueryable();
+            var query = Context.Set<TEntity>().AsNoTracking();
 
-            if (options?.Includes != null)
-            {
-                foreach (var navigationPath in options.Includes)
-                {
-                    query = query.Include(navigationPath);
-                }
-            }
+            query = HandleIncludes(query, options);
 
             return await query.SingleAsync(e => e.Id == key);
         }
@@ -134,6 +121,32 @@ namespace iRentApi.Service.Contract
             var entity = await Context.Set<TEntity>().FindAsync(key) ?? throw new EntityNotFoundException();
             Context.Set<TEntity>().Remove(entity);
             await Context.SaveChangesAsync();
+        }
+
+        private IQueryable<TEntity> HandleIncludes(IQueryable<TEntity> query, SelectOptions? options)
+        {
+            if (options?.Includes != null)
+            {
+                foreach (var navigationPath in options.Includes)
+                {
+                    if (typeof(TEntity).GetProperty(navigationPath) != null)
+                    {
+                        query = query.Include(navigationPath);
+                    }
+                }
+            }
+            else if (DefaultSelectOptions?.Includes != null)
+            {
+                foreach (var navigationPath in DefaultSelectOptions.Includes)
+                {
+                    if (typeof(TEntity).GetProperty(navigationPath) != null)
+                    {
+                        query = query.Include(navigationPath);
+                    }
+                }
+            }
+
+            return query;
         }
     }
 }

@@ -15,10 +15,16 @@ namespace iRentApi.Controllers
         {
         }
 
-        [HttpGet("user/{id}")]
-        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetOwnWarehouse([FromQuery] SelectOptions? options, [FromRoute(Name = "id")] long userId)
+        [HttpGet("owner/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetOwnerWarehouse([FromQuery] SelectOptions? options, [FromRoute(Name = "id")] long userId)
         {
-            return await Service.WarehouseService.GetOwnWarehouseList(userId, options);
+            return await Service.WarehouseService.GetOwnerWarehouseList(userId, options);
+        }
+
+        [HttpGet("renter/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetRenterWarehouse([FromQuery] SelectOptions? options, [FromRoute(Name = "id")] long userId)
+        {
+            return await Service.WarehouseService.GetRenterWarehouseList(userId, options);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace iRentApi.Service.Contract
         {
         }
 
-        public abstract Task<List<WarehouseDTO>> GetOwnWarehouseList(long userId, SelectOptions? options = null);
+        public abstract Task<List<WarehouseDTO>> GetOwnerWarehouseList(long userId, SelectOptions? options = null);
+        public abstract Task<List<WarehouseDTO>> GetRenterWarehouseList(long userId, SelectOptions? options = null);
     }
 }

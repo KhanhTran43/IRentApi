@@ -35,7 +35,7 @@ namespace iRentApi.Model.Entity
                 var activedRentedWarehouse = RentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).FirstOrDefault();
 
                 if(activedRentedWarehouse != null)
-                    return new RentedInfo() { EndDate = activedRentedWarehouse.EndDate, RentedDate = activedRentedWarehouse.RentedDate};
+                    return new RentedInfo() { EndDate = activedRentedWarehouse.EndDate, RentedDate = activedRentedWarehouse.RentedDate, RenterId = activedRentedWarehouse.RenterId };
                 else 
                     return null;
             }
