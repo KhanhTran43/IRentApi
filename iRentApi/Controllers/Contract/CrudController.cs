@@ -18,7 +18,7 @@ namespace iRentApi.Controllers.Contract
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TSelect>>> GetAll([FromQuery] SelectOptions options)
+        public virtual async Task<ActionResult<IEnumerable<TSelect>>> GetAll([FromQuery] SelectOptions options)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace iRentApi.Controllers.Contract
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TSelect>> Get([FromRoute] long id,[FromQuery] SelectOptions options)
+        public virtual async Task<ActionResult<TSelect>> Get([FromRoute] long id,[FromQuery] SelectOptions options)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace iRentApi.Controllers.Contract
         }
 
         [HttpPost]
-        public async Task<ActionResult<TEntity>> Add(TInsert insert)
+        public virtual async Task<ActionResult<TEntity>> Add(TInsert insert)
         {
             var service = Service.EntityService<TEntity>();
 

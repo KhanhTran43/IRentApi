@@ -85,7 +85,6 @@ namespace iRentApi.Service.Implement
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName)
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
             };
@@ -99,7 +98,6 @@ namespace iRentApi.Service.Implement
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName)
                 }),
                 Expires = DateTime.UtcNow.AddYears(1),
             };

@@ -1,25 +1,20 @@
-﻿using Domain.Model;
-using iRentApi.Model.Entity;
+﻿using iRentApi.Model.Entity;
 using iRentApi.Model.Entity.Contract;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Model.Entity
 {
+    [Index(nameof(Email), IsUnique = true)]
     public class User : EntityBase
     {
         public string Name { get; set; }
-        public string UserName { get; set; }
         public string Password { get; set; }
         [EmailAddress]
         public string Email { get; set; }
         public string Address { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string Ioc { get; set; }
+        public DateTime Dob { get; set; }
 
         [Phone]
         public string PhoneNumber { get; set; }
