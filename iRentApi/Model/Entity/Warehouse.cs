@@ -30,14 +30,14 @@ namespace iRentApi.Model.Entity
 
         public RentedInfo? GetRentedInfo()
         {
-            if (RentedWarehouses != null)
+            if (RentedWarehouses != null && RentedWarehouses.Count > 0)
             {
-                if (RentedWarehouses.Count > 0)
-                {
-                        var activedRentedWarehouse = RentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).First();
+                var activedRentedWarehouse = RentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).FirstOrDefault();
+
+                if(activedRentedWarehouse != null)
                     return new RentedInfo() { EndDate = activedRentedWarehouse.EndDate, RentedDate = activedRentedWarehouse.RentedDate};
-                }
-                else return null;
+                else 
+                    return null;
             }
             else return null;
         }
