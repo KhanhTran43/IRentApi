@@ -1,5 +1,6 @@
 ﻿using Domain.Model.Entity;
 using iRentApi.DTO.Contract;
+using iRentApi.Model.Entity;
 using iRentApi.Model.Validation;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,7 +19,6 @@ namespace iRentApi.DTO
         public DateTime Dob { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-
         public ICollection<RoleDTO>? Roles { get; set; }
     }
 }
