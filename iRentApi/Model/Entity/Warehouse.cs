@@ -10,6 +10,7 @@ namespace iRentApi.Model.Entity
         public User? User { get; set; }
         public string Name { get; set; }
         public Ward Ward { get; set; }
+        public string Image { get; set; }
         public string Address { get; set; }
         public decimal Price { get; set; }
         public decimal Area { get; set; }

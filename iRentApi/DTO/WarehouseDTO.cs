@@ -9,6 +9,7 @@ namespace iRentApi.DTO
         public long Id { get; set; }
         public long UserId { get; set; }
         public string Name { get; set; }
+        public string Image { get; set; }
         public Ward Ward { get; set; }
         public string Address { get; set; }
         public decimal Price { get; set; }
