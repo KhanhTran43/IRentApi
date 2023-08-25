@@ -10,7 +10,7 @@ namespace iRentApi.Model.Entity
         public RentedWarehouse RentedWarehouse { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string URL { get; set; }
+        public string Base64 { get; set; }
         public bool Actived { get; set; }
     }
 }

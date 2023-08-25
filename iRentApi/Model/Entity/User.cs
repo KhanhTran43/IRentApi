@@ -21,7 +21,8 @@ namespace Domain.Model.Entity
 
         public string? RefreshToken { get; set; }
 
-        public ICollection<Role> Roles { get; set; }
+        public Role Role { get; set; }
+
         public ICollection<Warehouse> Warehouses { get; set; }
     }
 }

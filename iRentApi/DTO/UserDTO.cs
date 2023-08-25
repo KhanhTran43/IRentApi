@@ -19,6 +19,6 @@ namespace iRentApi.DTO
         public DateTime Dob { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        public ICollection<RoleDTO>? Roles { get; set; }
+        public Role Role { get; set; }
     }
 }

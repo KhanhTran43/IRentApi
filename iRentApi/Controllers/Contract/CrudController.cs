@@ -51,7 +51,7 @@ namespace iRentApi.Controllers.Contract
 
             if (service == null)
             {
-                return Problem("Entity set 'IRentContext.Users'  is null.");
+                return Problem($"Entity set 'IRentContext.{nameof(TEntity)}s'  is null.");
             }
 
             try
@@ -60,6 +60,27 @@ namespace iRentApi.Controllers.Contract
                 return CreatedAtAction("Get", new { id = entity.Id }, entity);
             }
             catch(Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public virtual async Task<IActionResult> Delete(long id)
+        {
+            var service = Service.EntityService<TEntity>();
+
+            if (service == null)
+            {
+                return Problem($"Entity set 'IRentContext.{nameof(TEntity)}s'  is null.");
+            }
+
+            try
+            {
+                await service.Delete(id);
+                return Ok("Deleted");
+            }
+            catch (Exception e)
             {
                 return Problem(e.Message);
             }

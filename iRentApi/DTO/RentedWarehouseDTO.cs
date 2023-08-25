@@ -10,5 +10,6 @@ namespace iRentApi.DTO
         public long WarehouseId { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string ContractBase64 { get; set; }
     }
 }

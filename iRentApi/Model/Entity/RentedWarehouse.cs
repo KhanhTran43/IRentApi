@@ -1,4 +1,4 @@
-﻿using Domain.Model.Entity;
+﻿ using Domain.Model.Entity;
 using iRentApi.Model.Entity.Contract;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,5 +13,6 @@ namespace iRentApi.Model.Entity
         public Warehouse Warehouse { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string ContractBase64 { get; set; }
     }
 }
