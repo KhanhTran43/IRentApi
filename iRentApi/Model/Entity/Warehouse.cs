@@ -14,6 +14,8 @@ namespace iRentApi.Model.Entity
         public string Address { get; set; }
         public decimal Price { get; set; }
         public decimal Area { get; set; }
+        public int Doors { get; set; }
+        public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
         public virtual ICollection<RentedWarehouse> RentedWarehouses { get; set; }
 

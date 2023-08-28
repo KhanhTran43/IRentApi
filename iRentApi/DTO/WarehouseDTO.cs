@@ -15,6 +15,8 @@ namespace iRentApi.DTO
         public decimal Price { get; set; }
         public bool Rented { get; set; }
         public decimal Area { get; set; }
+        public int Doors { get; set; }
+        public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
         public RentedInfo? RentedInfo { get; set; }
     }
