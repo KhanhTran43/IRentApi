@@ -9,7 +9,7 @@ namespace iRentApi.Controllers
     public class PaymentController : ControllerBase
     {
         [HttpPost]
-        public async Task<PaymentIntentResponse> GetPaymentIntent(PaymentIntentRequest request)
+        public async Task<ActionResult<PaymentIntentResponse>> GetPaymentIntent(PaymentIntentRequest request)
         {
             var services = new PaymentIntentService();
             var opt = new PaymentIntentCreateOptions()
@@ -28,18 +28,21 @@ namespace iRentApi.Controllers
         }
 
         [HttpPost("fee")]
-        public async Task<PaymentIntentResponse> GetPaymentIntentWithFee(PaymentIntentRequest request)
+        public async Task<ActionResult<PaymentIntentResponse>> GetPaymentIntentWithFee(PaymentIntentRequest request)
         {
             var services = new PaymentIntentService();
+            var fee = request.Amount * 0.02;
             var opt = new PaymentIntentCreateOptions()
             {
                 Amount = request.Amount * 1000,
                 Currency = "VND",
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions()
+                ApplicationFeeAmount = (long)fee * 1000,
+                PaymentMethodTypes = new List<string> { "card" },
+                TransferData = new PaymentIntentTransferDataOptions()
                 {
-                    Enabled = true,
-                }
+                    Destination = "acct_1NoiucCIgtKTXluO",
 
+                },
             };
             var paymentIntent = await services.CreateAsync(opt);
 
@@ -47,13 +50,13 @@ namespace iRentApi.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<Account> CreateConnectedAccount()
+        public async Task<IActionResult> CreateConnectedAccount()
         {
             var accountService = new AccountService();
 
             var account = await accountService.CreateAsync(new AccountCreateOptions()
             {
-                Type = "express",
+                Type = "custom",
                 Country = "US",
                 Email = "test@email.com",
                 BusinessType = "individual",
@@ -100,28 +103,19 @@ namespace iRentApi.Controllers
                 }
             });
 
+            var customerService = new CustomerService();
+            var customer = customerService.Create(new CustomerCreateOptions() { 
+                Name = "Tran Quoc Khanh Customer",
+                Email = "quockhanh@gmail.com",
+            });
+
             //var accountLinkService = new AccountLinkService();
 
             //var accountLink = await accountLinkService.CreateAsync(new AccountLinkCreateOptions() { Account = account.Id, ReturnUrl = "http://localhost:4200/login", RefreshUrl = "http://localhost:4200/home", Type = "account_onboarding" });
 
             //return accountLink;
 
-            return account;
-        }
-
-        [HttpPatch("accept/{id}")]
-        public async Task<Account> AcceptServiceTerm(string id)
-        {
-            var options = new AccountUpdateOptions
-            {
-                TosAcceptance = new AccountTosAcceptanceOptions
-                {
-                    Date = DateTimeOffset.FromUnixTimeSeconds(1609798905).UtcDateTime,
-                    Ip = "8.8.8.8",
-                },
-            };
-            var service = new AccountService();
-            return await service.UpdateAsync(id, options);
+            return Ok(new { accountId = account.Id, customerId = customer.Id });
         }
     }
 }
