@@ -1,11 +1,19 @@
-﻿using iRentApi.Model.Service.Stripe;
+﻿using AutoMapper;
+using Data.Context;
+using iRentApi.Helpers;
+using iRentApi.Model.Service.Stripe;
+using Microsoft.Extensions.Options;
 using Stripe;
 
 namespace iRentApi.Service.Implement
 {
-    public class StripeService
+    public class StripeService : IRentService
     {
-        public StripeCreateAccountResult CreateStripeAccount(string paymentMethod)
+        public StripeService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
+        {
+        }
+
+        public CreateAccountResult CreateStripeAccount(string paymentMethod)
         {
             var accountService = new AccountService();
 
@@ -66,7 +74,23 @@ namespace iRentApi.Service.Implement
                 PaymentMethod = paymentMethod,
             });
 
-            return new StripeCreateAccountResult() { AccountId = account.Id, CustomerId = customer.Id };
+            // Set default payment method
+            var customerUpdateOptions = new CustomerUpdateOptions
+            {
+                InvoiceSettings = new CustomerInvoiceSettingsOptions() { DefaultPaymentMethod = paymentMethod }, 
+            };
+
+            customerService.UpdateAsync(customer.Id, customerUpdateOptions);
+
+            return new CreateAccountResult() { AccountId = account.Id, CustomerId = customer.Id };
+        }
+
+        public GetIntentPaymentPartiesResult GetIntentPaymentParties(long userId, long ownerId)
+        {
+            var customerId = this.Context.Users.FirstOrDefault(u => u.Id == userId)?.CustomerId;
+            var accountId = this.Context.Users.FirstOrDefault(u => u.Id == ownerId)?.AccountId;
+
+            return new GetIntentPaymentPartiesResult() { AccountId = accountId, CustomerId = customerId };
         }
     }
 }

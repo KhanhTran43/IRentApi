@@ -20,6 +20,7 @@ namespace iRentApi.Service.Implement
         private readonly IContractService _contractService;
         private readonly IPostService _postService;
         private readonly IRentedWarehouseService _rentedWarehouseService;
+        private readonly StripeService _stripeService;
 
         public ServiceWrapper(IRentContext context, IMapper mapper, IOptions<AppSettings> options)
         {
@@ -30,6 +31,7 @@ namespace iRentApi.Service.Implement
             _contractService = new ContractService(context, mapper, options);
             _postService = new PostService(context, mapper, options);
             _rentedWarehouseService = new RentedWarehouseService(context, mapper, options);
+            _stripeService = new StripeService(context, mapper, options);
         }
 
         public IUserService UserService => _userService;
@@ -43,6 +45,8 @@ namespace iRentApi.Service.Implement
         public IPostService PostService => _postService;
 
         public IRentedWarehouseService RentedWarehouseService => _rentedWarehouseService;
+
+        public StripeService StripeService => _stripeService;
 
         public IRentCRUDService<TEntity> EntityService<TEntity>() 
             where TEntity : EntityBase 
@@ -68,6 +72,5 @@ namespace iRentApi.Service.Implement
             if (servicePropertyInfo != null) return (IRentCRUDService<TEntity>)servicePropertyInfo.GetValue(this);
             else throw new Exception($"Service of type {typeof(TEntity).Name} does not exist");
         }
-
     }
 }

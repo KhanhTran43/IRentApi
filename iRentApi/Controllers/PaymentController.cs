@@ -1,4 +1,7 @@
-﻿using iRentApi.Model.Http.Payment;
+﻿using iRentApi.Controllers.Contract;
+using iRentApi.Model.Http.Payment;
+using iRentApi.Model.Service.Stripe;
+using iRentApi.Service.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
@@ -6,8 +9,12 @@ namespace iRentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentController : IRentController
     {
+        public PaymentController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        {
+        }
+
         [HttpPost]
         public async Task<ActionResult<PaymentIntentResponse>> GetPaymentIntent(PaymentIntentRequest request)
         {
@@ -32,16 +39,25 @@ namespace iRentApi.Controllers
         {
             var services = new PaymentIntentService();
             var fee = request.Amount * 0.02;
+
+            if (request.OwnerId == null || request.UserId == null) return BadRequest("ownerId or userId value is invalid");
+
+            var parties = Service.StripeService.GetIntentPaymentParties(request.UserId.Value, request.OwnerId.Value);
+
+            var customerService = new CustomerService();
+            var customer = customerService.Get(parties.CustomerId);
+
             var opt = new PaymentIntentCreateOptions()
             {
                 Amount = request.Amount * 1000,
                 Currency = "VND",
+                Customer = customer.Id,
+                PaymentMethod = customer.InvoiceSettings.DefaultPaymentMethodId,
                 ApplicationFeeAmount = (long)fee * 1000,
                 PaymentMethodTypes = new List<string> { "card" },
                 TransferData = new PaymentIntentTransferDataOptions()
                 {
-                    Destination = "acct_1NoiucCIgtKTXluO",
-
+                    Destination = parties.AccountId,
                 },
             };
             var paymentIntent = await services.CreateAsync(opt);
@@ -49,73 +65,39 @@ namespace iRentApi.Controllers
             return new PaymentIntentResponse() { ClientSecret = paymentIntent.ClientSecret };
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateConnectedAccount()
+        [HttpPost("account/{paymentMethod}")]
+        public async Task<ActionResult<CreateAccountResult>> CreateConnectedAccount(string paymentMethod)
         {
-            var accountService = new AccountService();
+            return Ok(Service.StripeService.CreateStripeAccount(paymentMethod));
+        }
 
-            var account = await accountService.CreateAsync(new AccountCreateOptions()
+        [HttpPost("attach-payment-method")]
+        public IActionResult AttachPaymentMethod([FromBody] AttachPaymentMethodRequest attachPaymentMethodRequest)
+        {
+            try
             {
-                Type = "custom",
-                Country = "US",
-                Email = "test@email.com",
-                BusinessType = "individual",
-                Individual = new AccountIndividualOptions()
-                {
-                    FirstName = "Ho",
-                    LastName = "Huu Tinh",
-                    Dob = new DobOptions() { Day = 17, Month = 10, Year = 2001 },
-                    SsnLast4 = "0000",
-                    Email = "huutinh@gmail.com",
-                    Phone = "000 000 0000",
-                    Address = new AddressOptions()
+                // Attach the PaymentMethod to the connected account
+                var paymentMethodService = new PaymentMethodService();
+                var attachedPaymentMethod = paymentMethodService.Attach(
+                    attachPaymentMethodRequest.PaymentMethodId,
+                    new PaymentMethodAttachOptions()
                     {
-                        City = "Scaramento",
-                        Country = "US",
-                        PostalCode = "90002",
-                        State = "California",
-                        Line1 = "address_full_match",
-                    }
-                },
-                BusinessProfile = new AccountBusinessProfileOptions()
-                {
-                    Mcc = "4225",
-                    Url = "https://irent.com"
-                },
-                Capabilities = new AccountCapabilitiesOptions()
-                {
-                    Transfers = new AccountCapabilitiesTransfersOptions() { Requested = true },
-                    CardPayments = new AccountCapabilitiesCardPaymentsOptions() { Requested = true },
-                },
-                ExternalAccount = new AnyOf<string, AccountBankAccountOptions, AccountCardOptions>(
-                    new AccountBankAccountOptions()
+                        Customer = "cus_OdAPzwnTLlT8CI"
+                    },
+                    requestOptions: new RequestOptions
                     {
-                        RoutingNumber = "110000000",
-                        AccountNumber = "000123456789",
-                        Country = "US"
+                        StripeAccount = attachPaymentMethodRequest.AccountId
                     }
-                ),
-                TosAcceptance = new AccountTosAcceptanceOptions()
-                {
-                    Date = DateTime.Now,
-                    ServiceAgreement = "full",
-                    Ip = "8.8.8.8",
-                }
-            });
+                );
 
-            var customerService = new CustomerService();
-            var customer = customerService.Create(new CustomerCreateOptions() { 
-                Name = "Tran Quoc Khanh Customer",
-                Email = "quockhanh@gmail.com",
-            });
-
-            //var accountLinkService = new AccountLinkService();
-
-            //var accountLink = await accountLinkService.CreateAsync(new AccountLinkCreateOptions() { Account = account.Id, ReturnUrl = "http://localhost:4200/login", RefreshUrl = "http://localhost:4200/home", Type = "account_onboarding" });
-
-            //return accountLink;
-
-            return Ok(new { accountId = account.Id, customerId = customer.Id });
+                // Handle success
+                return Ok("PaymentMethod attached to connected account");
+            }
+            catch (StripeException e)
+            {
+                // Handle error
+                return BadRequest($"Error: {e.Message}");
+            }
         }
     }
 }

@@ -23,6 +23,9 @@ namespace Domain.Model.Entity
 
         public Role Role { get; set; }
 
+        public string? AccountId { get; set; }
+        public string? CustomerId { get; set; }
+
         public ICollection<Warehouse> Warehouses { get; set; }
     }
 }

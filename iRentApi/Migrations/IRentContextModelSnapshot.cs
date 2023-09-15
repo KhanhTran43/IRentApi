@@ -30,8 +30,14 @@ namespace iRentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Address")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Dob")
@@ -68,7 +74,7 @@ namespace iRentApi.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.Comment", b =>
@@ -98,7 +104,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.ContractModel", b =>
@@ -129,7 +135,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("RentedWarehouseId");
 
-                    b.ToTable("Contract");
+                    b.ToTable("Contract", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.Post", b =>
@@ -161,7 +167,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.RentedWarehouse", b =>
@@ -194,7 +200,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("RentedWarehouses");
+                    b.ToTable("RentedWarehouses", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.Warehouse", b =>
@@ -242,7 +248,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Warehouses");
+                    b.ToTable("Warehouses", (string)null);
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.Comment", b =>

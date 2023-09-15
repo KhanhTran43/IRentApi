@@ -19,6 +19,8 @@ namespace iRentApi.DTO
         public DateTime Dob { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
+        public string AccountId { get; set; }
+        public string CustomerId { get; set; }
         public Role Role { get; set; }
     }
 }

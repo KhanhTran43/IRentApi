@@ -4,10 +4,10 @@ using iRentApi.Helpers;
 
 namespace iRentApi.Service.Contract
 {
-    public interface IService
+    public abstract class IService
     {
-        IRentContext Context { get; }
-        IMapper Mapper { get; }
-        AppSettings AppSettings { get; }
+        protected abstract IRentContext Context { get; }
+        protected abstract IMapper Mapper { get; }
+        protected abstract AppSettings AppSettings { get; }
     }
 }
