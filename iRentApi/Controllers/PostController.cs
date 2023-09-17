@@ -8,7 +8,7 @@ namespace iRentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : CrudController<Post, PostDTO, PostDTO, PostDTO>
+    public class PostController : CrudController<Warehouse, PostDTO, PostDTO, PostDTO>
     {
         public PostController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
         {

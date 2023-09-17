@@ -44,6 +44,33 @@ namespace iRentApi.Controllers.Contract
             }
         }
 
+        [HttpPost("static")]
+        public virtual async Task<ActionResult<IEnumerable<TSelect>>> GetAllStatic([FromQuery] SelectOptions options)
+        {
+            try
+            {
+                var entities = await Service.EntityService<TEntity>().SelectAll<TSelect>(options);
+                return entities;
+            }
+            catch (EntitySetEmptyException)
+            {
+                return NotFoundResult();
+            }
+        }
+
+        [HttpPost("static/{id}")]
+        public virtual async Task<ActionResult<TSelect>> GetStatic([FromRoute] long id, [FromQuery] SelectOptions options)
+        {
+            try
+            {
+                return await Service.EntityService<TEntity>().SelectByID<TSelect>(id, options);
+            }
+            catch (EntitySetEmptyException)
+            {
+                return NotFoundResult();
+            }
+        }
+
         [HttpPost]
         public virtual async Task<ActionResult<TEntity>> Add(TInsert insert)
         {

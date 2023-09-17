@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Contract
 {
-    public abstract class ICommentService : IRentCRUDService<Comment>
+    public abstract class ICommentService : IRentCRUDService<WarehouseComment>
     {
         protected ICommentService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {

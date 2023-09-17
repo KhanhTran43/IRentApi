@@ -4,14 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers.Contract
 {
-    public interface IController
+    public abstract class IController : ControllerBase
     {
-        IServiceWrapper Service { get; }
-
-        [NonAction]
-        ActionResult BadRequestResult(object? messsage = null);
-
-        [NonAction]
-        ActionResult NotFoundResult(string? messsage = null);
+        protected abstract IServiceWrapper Service { get; }
     }
 }

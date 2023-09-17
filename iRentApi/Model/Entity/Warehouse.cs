@@ -17,7 +17,8 @@ namespace iRentApi.Model.Entity
         public int Doors { get; set; }
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
-        public virtual ICollection<RentedWarehouse> RentedWarehouses { get; set; }
+        public ICollection<RentedWarehouse> RentedWarehouses { get; set; }
+        public ICollection<WarehouseComment> Comments { get; set; } 
 
         public bool GetRented()
         {

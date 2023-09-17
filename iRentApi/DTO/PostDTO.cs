@@ -3,7 +3,7 @@ using iRentApi.Model.Entity;
 
 namespace iRentApi.DTO
 {
-    public class PostDTO : ISelectDTO<Post>, IInsertDTO<Post>, IUpdateDTO<Post>
+    public class PostDTO : ISelectDTO<Warehouse>, IInsertDTO<Warehouse>, IUpdateDTO<Warehouse>
     {
         public long Id { get; set; }
         public long WareHouseId { get; set; }

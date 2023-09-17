@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers.Contract
 {
-    public abstract class IRentController : ControllerBase, IController
+    public abstract class IRentController : IController
     {
         private IServiceWrapper _serviceWrapper;
 
-        protected IRentController(IServiceWrapper serviceWrapper)
+        public IRentController(IServiceWrapper serviceWrapper)
         {
             _serviceWrapper = serviceWrapper;
         }
 
-        public IServiceWrapper Service => _serviceWrapper;
+        protected override IServiceWrapper Service => _serviceWrapper;
+        protected Dictionary<string, Action<object>> ResolveActions;
 
         [NonAction]
         public ActionResult BadRequestResult(object? messsage = null)

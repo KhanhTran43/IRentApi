@@ -1,4 +1,5 @@
 ﻿using Domain.Model.Entity;
+using iRentApi.Context.Convention;
 using iRentApi.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,11 +17,21 @@ namespace Data.Context
         public IRentContext(DbContextOptions options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            var cascadeDeleteConvention = new CascadeDeleteConvention();
+            cascadeDeleteConvention.Apply(modelBuilder.Model);
+        }
+
         public DbSet<User> Users { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Warehouse> Posts { get; set; }
+        public DbSet<WarehouseComment> Comments { get; set; }
         public DbSet<ContractModel> Contracts { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<RentedWarehouse> RentedWarehouses { get; set; }
+        public DbSet<WarehouseComment> WarehouseComments { get; set; }
+        public DbSet<WarehouseCommentLike> WarehouseCommentLikes { get; set; }
     }
 }

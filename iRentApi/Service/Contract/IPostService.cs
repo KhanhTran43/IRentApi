@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Contract
 {
-    public abstract class IPostService : IRentCRUDService<Post>
+    public abstract class IPostService : IRentCRUDService<Warehouse>
     {
         protected IPostService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {

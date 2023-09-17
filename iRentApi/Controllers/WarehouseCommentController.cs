@@ -8,9 +8,9 @@ namespace iRentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentController : CrudController<Comment, CommentDTO, CommentDTO, CommentDTO>
+    public class WarehouseCommentController : CrudController<WarehouseComment, WarehouseCommentDTO, WarehouseCommentDTO, WarehouseCommentDTO>
     {
-        public CommentController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        public WarehouseCommentController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
         {
         }
     }
