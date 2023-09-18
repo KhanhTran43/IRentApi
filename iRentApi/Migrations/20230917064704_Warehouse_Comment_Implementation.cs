@@ -9,37 +9,11 @@ namespace iRentApi.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RentedWarehouses_Warehouses_WarehouseId",
-                table: "RentedWarehouses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Warehouses_Users_UserId",
-                table: "Warehouses");
-
             migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Posts");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Warehouses",
-                table: "Warehouses");
-
-            migrationBuilder.RenameTable(
-                name: "Warehouses",
-                newName: "Warehouse");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Warehouses_UserId",
-                table: "Warehouse",
-                newName: "IX_Warehouse_UserId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Warehouse",
-                table: "Warehouse",
-                column: "Id");
 
             migrationBuilder.CreateTable(
                 name: "WarehouseComment",
@@ -59,12 +33,11 @@ namespace iRentApi.Migrations
                         name: "FK_WarehouseComment_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WarehouseComment_Warehouse_WarehouseId",
+                        name: "FK_WarehouseComment_Warehouses_WarehouseId",
                         column: x => x.WarehouseId,
-                        principalTable: "Warehouse",
+                        principalTable: "Warehouses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -114,56 +87,15 @@ namespace iRentApi.Migrations
                 name: "IX_WarehouseCommentLikes_UserId",
                 table: "WarehouseCommentLikes",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RentedWarehouses_Warehouse_WarehouseId",
-                table: "RentedWarehouses",
-                column: "WarehouseId",
-                principalTable: "Warehouse",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Warehouse_Users_UserId",
-                table: "Warehouse",
-                column: "UserId",
-                principalTable: "Users",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RentedWarehouses_Warehouse_WarehouseId",
-                table: "RentedWarehouses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Warehouse_Users_UserId",
-                table: "Warehouse");
-
             migrationBuilder.DropTable(
                 name: "WarehouseCommentLikes");
 
             migrationBuilder.DropTable(
                 name: "WarehouseComment");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Warehouse",
-                table: "Warehouse");
-
-            migrationBuilder.RenameTable(
-                name: "Warehouse",
-                newName: "Warehouses");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Warehouse_UserId",
-                table: "Warehouses",
-                newName: "IX_Warehouses_UserId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Warehouses",
-                table: "Warehouses",
-                column: "Id");
 
             migrationBuilder.CreateTable(
                 name: "Posts",
@@ -230,21 +162,6 @@ namespace iRentApi.Migrations
                 name: "IX_Posts_WarehouseId",
                 table: "Posts",
                 column: "WarehouseId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RentedWarehouses_Warehouses_WarehouseId",
-                table: "RentedWarehouses",
-                column: "WarehouseId",
-                principalTable: "Warehouses",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Warehouses_Users_UserId",
-                table: "Warehouses",
-                column: "UserId",
-                principalTable: "Users",
-                principalColumn: "Id");
         }
     }
 }

@@ -3,11 +3,14 @@ using Data.Context;
 using iRentApi.DTO.Contract;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity.Contract;
+using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Implement;
 using iRentApi.Service.ServiceException;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Collections;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace iRentApi.Service.Contract
 {
@@ -18,13 +21,11 @@ namespace iRentApi.Service.Contract
 
     public abstract class IRentCRUDService<TEntity> : IRentService where TEntity : EntityBase
     {
-        public SelectOptions DefaultSelectOptions { get; set; }
-
         protected IRentCRUDService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
         {
         }
 
-        public async Task<List<TEntity>> SelectAll(SelectOptions? options = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
+        public async Task<List<TEntity>> SelectAll(GetStaticRequest? reqeust = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -33,7 +34,7 @@ namespace iRentApi.Service.Contract
 
             var query = Context.Set<TEntity>().AsNoTracking();
 
-            query = HandleIncludes(query, options);
+            query = HandleIncludes(query, reqeust);
 
             if (wherePredicate != null) query = query.Where(wherePredicate);
 
@@ -42,12 +43,12 @@ namespace iRentApi.Service.Contract
             return result;
         }
 
-        public async Task<List<TSelect>> SelectAll<TSelect>(SelectOptions? options = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
+        public async Task<List<TSelect>> SelectAll<TSelect>(GetStaticRequest? request = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
-            return Mapper.Map<List<TSelect>>(await SelectAll(options, wherePredicate));
+            return Mapper.Map<List<TSelect>>(await SelectAll(request, wherePredicate));
         }
 
-        public async Task<TEntity> SelectByID(long key, SelectOptions? options = null)
+        public async Task<TEntity> SelectByID(long key, GetStaticRequest? request = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -56,14 +57,14 @@ namespace iRentApi.Service.Contract
 
             var query = Context.Set<TEntity>().AsNoTracking();
 
-            query = HandleIncludes(query, options);
+            query = HandleIncludes(query, request);
 
             return await query.SingleAsync(e => e.Id == key);
         }
 
-        public async Task<TSelect> SelectByID<TSelect>(long key, SelectOptions? options = null)
+        public async Task<TSelect> SelectByID<TSelect>(long key, GetStaticRequest? request = null)
         {
-            return Mapper.Map<TSelect>(await SelectByID(key, options));
+            return Mapper.Map<TSelect>(await SelectByID(key, request));
         }
 
         public async Task<bool> ExistByID(long key)
@@ -123,30 +124,58 @@ namespace iRentApi.Service.Contract
             await Context.SaveChangesAsync();
         }
 
-        private IQueryable<TEntity> HandleIncludes(IQueryable<TEntity> query, SelectOptions? options)
+        private IQueryable<TEntity> HandleIncludes(IQueryable<TEntity> query, GetStaticRequest? request)
         {
-            if (options?.Includes != null)
+            var includes = request?.Includes;
+
+            if(includes != null)
             {
-                foreach (var navigationPath in options.Includes)
+                foreach (var navigationPath in includes)
                 {
-                    if (typeof(TEntity).GetProperty(navigationPath) != null)
+                    if (IsNavigationPathValid<TEntity>(navigationPath))
                     {
                         query = query.Include(navigationPath);
                     }
-                }
-            }
-            else if (DefaultSelectOptions?.Includes != null)
-            {
-                foreach (var navigationPath in DefaultSelectOptions.Includes)
-                {
-                    if (typeof(TEntity).GetProperty(navigationPath) != null)
+                    else
                     {
-                        query = query.Include(navigationPath);
+                        Console.WriteLine($"Invalid navigation path: {navigationPath}");
                     }
                 }
             }
 
             return query;
         }
+
+        private bool IsNavigationPathValid<TEntity>(string navigationPath)
+        {
+            var parts = navigationPath.Split('.');
+            var type = typeof(TEntity);
+
+            foreach (var part in parts)
+            {
+                var property = type.GetProperty(part);
+
+                if (property == null)
+                {
+                    return false; // The part of the navigation path is not a valid property.
+                }
+
+                type = GetPropertyType(property);
+            }
+
+            return true; // All parts of the navigation path are valid properties.
+        }
+
+        private Type GetPropertyType(PropertyInfo property)
+        {
+            // Handle properties that are collections (e.g., List<T>, ICollection<T>)
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType.IsGenericType)
+            {
+                return property.PropertyType.GetGenericArguments()[0]; // Get the generic type argument
+            }
+
+            return property.PropertyType;
+        }
+
     }
 }

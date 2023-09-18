@@ -1,13 +1,15 @@
 ﻿using iRentApi.DTO.Contract;
 using iRentApi.Model.Entity.Contract;
+using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Contract;
 using iRentApi.Service.ServiceException;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace iRentApi.Controllers.Contract
 {
-    public abstract class CrudController<TEntity, TSelect, TInsert, TUpdate> : IRentController, ICrudController<TEntity, TSelect, TInsert, TUpdate>
+    public abstract class CrudController<TEntity, TSelect, TInsert, TUpdate> : IRentController
         where TEntity : EntityBase
         where TSelect : ISelectDTO<TEntity>
         where TInsert : IInsertDTO<TEntity>
@@ -17,39 +19,12 @@ namespace iRentApi.Controllers.Contract
         {
         }
 
-        [HttpGet]
-        public virtual async Task<ActionResult<IEnumerable<TSelect>>> GetAll([FromQuery] SelectOptions options)
-        {
-            try
-            {
-                var entities = await Service.EntityService<TEntity>().SelectAll<TSelect>(options);
-                return entities;
-            }
-            catch (EntitySetEmptyException)
-            {
-                return NotFoundResult();
-            }
-        }
-
-        [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TSelect>> Get([FromRoute] long id,[FromQuery] SelectOptions options)
-        {
-            try
-            {
-                return await Service.EntityService<TEntity>().SelectByID<TSelect>(id, options);
-            }
-            catch (EntitySetEmptyException)
-            {
-                return NotFoundResult();
-            }
-        }
-
         [HttpPost("static")]
-        public virtual async Task<ActionResult<IEnumerable<TSelect>>> GetAllStatic([FromQuery] SelectOptions options)
+        public virtual async Task<ActionResult<IEnumerable<TSelect>>> GetAllStatic([FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GetStaticRequest? request)
         {
             try
             {
-                var entities = await Service.EntityService<TEntity>().SelectAll<TSelect>(options);
+                var entities = await Service.EntityService<TEntity>().SelectAll<TSelect>(request);
                 return entities;
             }
             catch (EntitySetEmptyException)
@@ -59,11 +34,11 @@ namespace iRentApi.Controllers.Contract
         }
 
         [HttpPost("static/{id}")]
-        public virtual async Task<ActionResult<TSelect>> GetStatic([FromRoute] long id, [FromQuery] SelectOptions options)
+        public virtual async Task<ActionResult<TSelect>> GetStatic([FromRoute] long id, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GetStaticRequest? request)
         {
             try
             {
-                return await Service.EntityService<TEntity>().SelectByID<TSelect>(id, options);
+                return await Service.EntityService<TEntity>().SelectByID<TSelect>(id, request);
             }
             catch (EntitySetEmptyException)
             {

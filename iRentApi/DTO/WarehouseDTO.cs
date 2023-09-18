@@ -19,5 +19,6 @@ namespace iRentApi.DTO
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
         public RentedInfo? RentedInfo { get; set; }
+        public List<WarehouseCommentDTO> Comments { get; set; }
     }
 }

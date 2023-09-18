@@ -9,7 +9,7 @@ namespace iRentApi.Model.Entity
         public long CommentId { get; set; }
         public WarehouseComment? Comment { get; set; }
         public long UserId { get; set; }
-        [CascadeDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.)]
+        [CascadeDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.NoAction)]
         public User? User { get; set; }
         public string? Type { get; set; }
     }

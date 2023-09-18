@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace iRentApi.Migrations
 {
     [DbContext(typeof(IRentContext))]
-    [Migration("20230916104954_Warehouse_Comment_Implementation")]
+    [Migration("20230917064704_Warehouse_Comment_Implementation")]
     partial class Warehouse_Comment_Implementation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,7 +188,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Warehouse");
+                    b.ToTable("Warehouses");
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.WarehouseComment", b =>
@@ -289,7 +289,7 @@ namespace iRentApi.Migrations
                     b.HasOne("Domain.Model.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("iRentApi.Model.Entity.Warehouse", "Warehouse")
@@ -314,7 +314,7 @@ namespace iRentApi.Migrations
                     b.HasOne("Domain.Model.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Comment");

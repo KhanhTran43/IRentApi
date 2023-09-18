@@ -186,7 +186,7 @@ namespace iRentApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Warehouse");
+                    b.ToTable("Warehouses");
                 });
 
             modelBuilder.Entity("iRentApi.Model.Entity.WarehouseComment", b =>
@@ -287,7 +287,7 @@ namespace iRentApi.Migrations
                     b.HasOne("Domain.Model.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("iRentApi.Model.Entity.Warehouse", "Warehouse")
@@ -312,7 +312,7 @@ namespace iRentApi.Migrations
                     b.HasOne("Domain.Model.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Comment");

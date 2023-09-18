@@ -10,7 +10,6 @@ namespace iRentApi.Context.Convention
     {
         public void Apply(IMutableModel model)
         {
-            System.Diagnostics.Debugger.Launch();
             foreach (var entityType in model.GetEntityTypes())
             {
                 foreach (var navigation in entityType.GetNavigations())
