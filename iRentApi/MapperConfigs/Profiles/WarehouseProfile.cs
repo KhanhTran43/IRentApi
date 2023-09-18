@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Model.Entity;
 using iRentApi.DTO;
+using iRentApi.MapperConfigs.TypeConverters;
 using iRentApi.Model.Entity;
 
 namespace iRentApi.MapperConfigs.Profiles
@@ -10,6 +11,7 @@ namespace iRentApi.MapperConfigs.Profiles
         public WarehouseProfile()
         {
             CreateMap<Warehouse, WarehouseDTO>().ReverseMap();
+            CreateMap<CreateWarehouseDTO, Warehouse>();
         }
     }
 }

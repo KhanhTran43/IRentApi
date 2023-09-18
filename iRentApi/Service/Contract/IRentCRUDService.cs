@@ -85,7 +85,7 @@ namespace iRentApi.Service.Contract
             }
         }
 
-        public async Task<TEntity> Insert(IInsertDTO<TEntity> insert)
+        public async Task<TResult> Insert<TResult>(IInsertDTO<TEntity> insert)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -96,7 +96,7 @@ namespace iRentApi.Service.Contract
             var entityEntry = Context.Set<TEntity>().Add(entity);
             await Context.SaveChangesAsync();
 
-            return entityEntry.Entity;
+            return Mapper.Map<TResult>(entityEntry.Entity);
         }
 
         public async Task Update(IUpdateDTO<TEntity> update)

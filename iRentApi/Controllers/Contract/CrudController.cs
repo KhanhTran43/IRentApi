@@ -58,8 +58,8 @@ namespace iRentApi.Controllers.Contract
 
             try
             {
-                var entity = await service.Insert(insert);
-                return CreatedAtAction("Get", new { id = entity.Id }, entity);
+                var entity = await service.Insert<TSelect>(insert);
+                return CreatedAtAction("GetStatic", new { id = entity.Id }, entity);
             }
             catch(Exception e)
             {
