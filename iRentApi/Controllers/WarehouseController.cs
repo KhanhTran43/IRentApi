@@ -5,6 +5,7 @@ using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace iRentApi.Controllers
 {
@@ -16,14 +17,22 @@ namespace iRentApi.Controllers
         {
         }
 
-        [HttpGet("owner/{id}")]
-        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetOwnerWarehouse([FromQuery] GetStaticRequest? options, [FromRoute(Name = "id")] long userId)
+        [HttpPost("owner/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetOwnerWarehouse
+        (
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GetStaticRequest? options,
+            [FromRoute(Name = "id")] long ownerId
+        )
         {
-            return await Service.WarehouseService.GetOwnerWarehouseList(userId, options);
+            return await Service.WarehouseService.GetOwnerWarehouseList(ownerId, options);
         }
 
-        [HttpGet("renter/{id}")]
-        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetRenterWarehouse([FromQuery] GetStaticRequest? options, [FromRoute(Name = "id")] long userId)
+        [HttpPost("renter/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetRenterWarehouse
+        (
+            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GetStaticRequest? options,
+            [FromRoute(Name = "id")] long userId
+        )
         {
             return await Service.WarehouseService.GetRenterWarehouseList(userId, options);
         }

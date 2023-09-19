@@ -26,7 +26,7 @@ namespace iRentApi.Service.Database.Contract
         {
         }
 
-        public virtual async Task<List<TEntity>> SelectAll(GetStaticRequest? reqeust = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
+        public virtual async Task<List<TEntity>> SelectAll(GetStaticRequest? request = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -35,7 +35,7 @@ namespace iRentApi.Service.Database.Contract
 
             var query = Context.Set<TEntity>().AsNoTracking();
 
-            query = HandleIncludes(query, reqeust);
+            query = HandleIncludes(query, request);
 
             if (wherePredicate != null) query = query.Where(wherePredicate);
 
@@ -128,6 +128,11 @@ namespace iRentApi.Service.Database.Contract
         public virtual TResult MapTo<TResult>(TEntity entity)
         {
             return Mapper.Map<TResult>(entity);
+        }
+
+        public virtual List<TResult> MapManyTo<TResult>(List<TEntity> entity)
+        {
+            return Mapper.Map<List<TResult>>(entity);
         }
 
         public void Save()
