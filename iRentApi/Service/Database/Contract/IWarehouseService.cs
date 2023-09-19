@@ -4,10 +4,9 @@ using iRentApi.DTO;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
-using iRentApi.Service.Implement;
 using Microsoft.Extensions.Options;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database.Contract
 {
     public abstract class IWarehouseService : IRentCRUDService<Warehouse>
     {

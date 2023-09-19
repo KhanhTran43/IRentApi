@@ -3,7 +3,7 @@ using Data.Context;
 using Domain.Model.Entity;
 using iRentApi.Helpers;
 using iRentApi.Model.Http.Auth;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database.Contract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +15,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Database.Implement
 {
     public class AuthService : IAuthService
     {
@@ -27,18 +27,18 @@ namespace iRentApi.Service.Implement
         {
             try
             {
-                var user = await Context.Users.Where(user => user.Email == email && user.Password == password).SingleAsync();
+                var user = await base.Context.Users.Where(user => user.Email == email && user.Password == password).SingleAsync();
 
                 var jwtToken = GenerateAccessToken(user);
                 var refreshToken = GenerateRefreshToken(user);
 
                 user.RefreshToken = refreshToken;
-                Context.Update(user);
-                Context.SaveChanges();
+                base.Context.Update(user);
+                base.Context.SaveChanges();
 
                 return new AuthenticateResponse(user, jwtToken, refreshToken);
-            } 
-            catch (Exception ex)
+            }
+            catch (System.Exception ex)
             {
                 Console.Error.WriteLine(ex);
                 return null;
@@ -54,7 +54,7 @@ namespace iRentApi.Service.Implement
             var refreshToken = ValidateToken(token);
 
             // return null if token is no longer active
-            if (refreshToken ==  null) return null;
+            if (refreshToken == null) return null;
 
             var userIdFromToken = refreshToken.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
 
@@ -118,7 +118,7 @@ namespace iRentApi.Service.Implement
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
+                var key = Encoding.ASCII.GetBytes(base.AppSettings.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -129,7 +129,7 @@ namespace iRentApi.Service.Implement
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 return jwtToken;
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Console.Error.WriteLine(e);
                 return null;

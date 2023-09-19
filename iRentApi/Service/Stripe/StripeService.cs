@@ -2,18 +2,19 @@
 using Data.Context;
 using iRentApi.Helpers;
 using iRentApi.Model.Service.Stripe;
+using iRentApi.Service.Database.Implement;
 using Microsoft.Extensions.Options;
 using Stripe;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Stripe
 {
-    public class StripeService : IRentService
+    public class StripeService
     {
-        public StripeService(IRentContext context, IMapper mapper, IOptions<AppSettings> appSettings) : base(context, mapper, appSettings)
+        public StripeService()
         {
         }
 
-        public CreateAccountResult CreateStripeAccount(string paymentMethod)
+        public CreateAccountResult CreateStripeAccount(string paymentMethod, CreateAccountOptions options)
         {
             var accountService = new AccountService();
 
@@ -21,15 +22,15 @@ namespace iRentApi.Service.Implement
             {
                 Type = "custom",
                 Country = "US",
-                Email = "test@email.com",
+                Email = options.Email,
                 BusinessType = "individual",
                 Individual = new AccountIndividualOptions()
                 {
-                    FirstName = "Ho",
-                    LastName = "Huu Tinh",
-                    Dob = new DobOptions() { Day = 17, Month = 10, Year = 2001 },
+                    FirstName = options.FirstName,
+                    LastName = options.LastName,
+                    Dob = options.Dob,
                     SsnLast4 = "0000",
-                    Email = "huutinh@gmail.com",
+                    Email = options.Email,
                     Phone = "000 000 0000",
                     Address = new AddressOptions()
                     {
@@ -69,28 +70,20 @@ namespace iRentApi.Service.Implement
             var customerService = new CustomerService();
             var customer = customerService.Create(new CustomerCreateOptions()
             {
-                Name = "Tran Quoc Khanh Customer",
-                Email = "quockhanh@gmail.com",
+                Name = options.FirstName,
+                Email = options.Email,
                 PaymentMethod = paymentMethod,
             });
 
             // Set default payment method
             var customerUpdateOptions = new CustomerUpdateOptions
             {
-                InvoiceSettings = new CustomerInvoiceSettingsOptions() { DefaultPaymentMethod = paymentMethod }, 
+                InvoiceSettings = new CustomerInvoiceSettingsOptions() { DefaultPaymentMethod = paymentMethod },
             };
 
             customerService.UpdateAsync(customer.Id, customerUpdateOptions);
 
             return new CreateAccountResult() { AccountId = account.Id, CustomerId = customer.Id };
-        }
-
-        public GetIntentPaymentPartiesResult GetIntentPaymentParties(long userId, long ownerId)
-        {
-            var customerId = this.Context.Users.FirstOrDefault(u => u.Id == userId)?.CustomerId;
-            var accountId = this.Context.Users.FirstOrDefault(u => u.Id == ownerId)?.AccountId;
-
-            return new GetIntentPaymentPartiesResult() { AccountId = accountId, CustomerId = customerId };
         }
     }
 }

@@ -4,15 +4,16 @@ using iRentApi.DTO.Contract;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity.Contract;
 using iRentApi.Model.Service.Crud;
-using iRentApi.Service.Implement;
-using iRentApi.Service.ServiceException;
+using iRentApi.Service.Database.Exception;
+using iRentApi.Service.Database.Implement;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database.Contract
 {
     public class SelectOptions
     {
@@ -25,7 +26,7 @@ namespace iRentApi.Service.Contract
         {
         }
 
-        public async Task<List<TEntity>> SelectAll(GetStaticRequest? reqeust = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
+        public virtual async Task<List<TEntity>> SelectAll(GetStaticRequest? reqeust = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -43,12 +44,12 @@ namespace iRentApi.Service.Contract
             return result;
         }
 
-        public async Task<List<TSelect>> SelectAll<TSelect>(GetStaticRequest? request = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
+        public virtual async Task<List<TSelect>> SelectAll<TSelect>(GetStaticRequest? request = null, Expression<Func<TEntity, bool>>? wherePredicate = null)
         {
             return Mapper.Map<List<TSelect>>(await SelectAll(request, wherePredicate));
         }
 
-        public async Task<TEntity> SelectByID(long key, GetStaticRequest? request = null)
+        public virtual async Task<TEntity> SelectByID(long key, GetStaticRequest? request = null)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -62,12 +63,12 @@ namespace iRentApi.Service.Contract
             return await query.SingleAsync(e => e.Id == key);
         }
 
-        public async Task<TSelect> SelectByID<TSelect>(long key, GetStaticRequest? request = null)
+        public virtual async Task<TSelect> SelectByID<TSelect>(long key, GetStaticRequest? request = null)
         {
             return Mapper.Map<TSelect>(await SelectByID(key, request));
         }
 
-        public async Task<bool> ExistByID(long key)
+        public virtual async Task<bool> ExistByID(long key)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -76,16 +77,16 @@ namespace iRentApi.Service.Contract
 
             try
             {
-                var entity = await Context.Set<TEntity>().SingleAsync(e => e.Id == key);
+                var entity = await base.Context.Set<TEntity>().SingleAsync(e => e.Id == key);
                 return entity != null;
             }
-            catch (Exception ex) when (ex is InvalidOperationException || ex is ArgumentNullException)
+            catch (System.Exception ex) when (ex is InvalidOperationException || ex is ArgumentNullException)
             {
                 return false;
             }
         }
 
-        public async Task<TResult> Insert<TResult>(IInsertDTO<TEntity> insert)
+        public virtual EntityEntry<TEntity> Insert(IInsertDTO<TEntity> insert)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -94,12 +95,11 @@ namespace iRentApi.Service.Contract
 
             var entity = Mapper.Map<TEntity>(insert);
             var entityEntry = Context.Set<TEntity>().Add(entity);
-            await Context.SaveChangesAsync();
 
-            return Mapper.Map<TResult>(entityEntry.Entity);
+            return entityEntry;
         }
 
-        public async Task Update(IUpdateDTO<TEntity> update)
+        public virtual EntityEntry<TEntity> Update(IUpdateDTO<TEntity> update)
         {
             if (Context.Set<TEntity>() == null)
             {
@@ -107,28 +107,44 @@ namespace iRentApi.Service.Contract
             }
 
             var entity = Mapper.Map<TEntity>(update);
+            var entityEntry = Context.Entry(entity);
 
-            Context.Entry(entity).State = EntityState.Modified;
-            await Context.SaveChangesAsync();
+            entityEntry.State = EntityState.Modified;
+
+            return entityEntry;
         }
 
-        public async Task Delete(long key)
+        public virtual void Delete(long key)
         {
             if (Context.Set<TEntity>() == null)
             {
                 throw new EntityNotFoundException();
             }
 
-            var entity = await Context.Set<TEntity>().FindAsync(key) ?? throw new EntityNotFoundException();
+            var entity = Context.Set<TEntity>().Find(key) ?? throw new EntityNotFoundException();
             Context.Set<TEntity>().Remove(entity);
-            await Context.SaveChangesAsync();
+        }
+
+        public virtual TResult MapTo<TResult>(TEntity entity)
+        {
+            return Mapper.Map<TResult>(entity);
+        }
+
+        public void Save()
+        {
+            Context.SaveChanges();
+        }
+
+        public Task SaveAsync()
+        {
+            return Context.SaveChangesAsync();
         }
 
         private IQueryable<TEntity> HandleIncludes(IQueryable<TEntity> query, GetStaticRequest? request)
         {
             var includes = request?.Includes;
 
-            if(includes != null)
+            if (includes != null)
             {
                 foreach (var navigationPath in includes)
                 {
@@ -176,6 +192,5 @@ namespace iRentApi.Service.Contract
 
             return property.PropertyType;
         }
-
     }
 }

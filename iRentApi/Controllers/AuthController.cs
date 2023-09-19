@@ -1,7 +1,6 @@
 ﻿using iRentApi.Controllers.Contract;
 using iRentApi.DTO;
-using iRentApi.Service.Contract;
-using iRentApi.Service.Implement;
+using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
@@ -12,7 +11,7 @@ namespace iRentApi.Controllers
     [ApiController]
     public class AuthController : IRentController
     {
-        public AuthController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        public AuthController(IUnitOfWork serviceWrapper) : base(serviceWrapper)
         {
         }
 

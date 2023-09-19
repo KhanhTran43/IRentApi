@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Data.Context;
 using iRentApi.Helpers;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database.Contract;
 using Microsoft.Extensions.Options;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Database.Implement
 {
     public class PostService : IPostService
     {

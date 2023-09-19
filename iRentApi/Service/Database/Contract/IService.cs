@@ -2,7 +2,7 @@
 using Data.Context;
 using iRentApi.Helpers;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database.Contract
 {
     public abstract class IService
     {

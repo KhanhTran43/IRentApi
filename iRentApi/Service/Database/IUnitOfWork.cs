@@ -1,11 +1,12 @@
 ﻿using Domain.Model.Entity;
 using iRentApi.DTO.Contract;
 using iRentApi.Model.Entity.Contract;
-using iRentApi.Service.Implement;
+using iRentApi.Service.Database.Contract;
+using iRentApi.Service.Stripe;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database
 {
-    public interface IServiceWrapper
+    public interface IUnitOfWork
     {
         IUserService UserService { get; }
         IAuthService AuthService { get; }
@@ -14,8 +15,6 @@ namespace iRentApi.Service.Contract
         IContractService ContractService { get; }
         IPostService PostService { get; }
         IRentedWarehouseService RentedWarehouseService { get; }
-        StripeService StripeService { get; }
-
         public IRentCRUDService<TEntity> EntityService<TEntity>()
             where TEntity : EntityBase;
     }

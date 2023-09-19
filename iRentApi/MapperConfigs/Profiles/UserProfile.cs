@@ -11,6 +11,7 @@ namespace iRentApi.MapperConfigs.Profiles
         public UserProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<CreateUserDTO, User>();
         }
     }
 }

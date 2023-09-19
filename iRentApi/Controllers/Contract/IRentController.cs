@@ -1,18 +1,18 @@
-﻿using iRentApi.Service.Contract;
+﻿using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers.Contract
 {
     public abstract class IRentController : IController
     {
-        private IServiceWrapper _serviceWrapper;
+        private IUnitOfWork _serviceWrapper;
 
-        public IRentController(IServiceWrapper serviceWrapper)
+        public IRentController(IUnitOfWork serviceWrapper)
         {
             _serviceWrapper = serviceWrapper;
         }
 
-        protected override IServiceWrapper Service => _serviceWrapper;
+        protected override IUnitOfWork Service => _serviceWrapper;
         protected Dictionary<string, Action<object>> ResolveActions;
 
         [NonAction]

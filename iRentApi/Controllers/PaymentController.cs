@@ -1,7 +1,8 @@
 ﻿using iRentApi.Controllers.Contract;
 using iRentApi.Model.Http.Payment;
 using iRentApi.Model.Service.Stripe;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database;
+using iRentApi.Service.Stripe;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
@@ -11,8 +12,10 @@ namespace iRentApi.Controllers
     [ApiController]
     public class PaymentController : IRentController
     {
-        public PaymentController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        StripeService StripeService { get; }
+        public PaymentController(IUnitOfWork serviceWrapper, StripeService stripeService) : base(serviceWrapper)
         {
+            StripeService = stripeService;
         }
 
         [HttpPost]
@@ -42,7 +45,7 @@ namespace iRentApi.Controllers
 
             if (request.OwnerId == null || request.UserId == null) return BadRequest("ownerId or userId value is invalid");
 
-            var parties = Service.StripeService.GetIntentPaymentParties(request.UserId.Value, request.OwnerId.Value);
+            var parties = Service.UserService.GetIntentPaymentParties(request.UserId.Value, request.OwnerId.Value);
 
             var customerService = new CustomerService();
             var customer = customerService.Get(parties.CustomerId);
@@ -63,41 +66,6 @@ namespace iRentApi.Controllers
             var paymentIntent = await services.CreateAsync(opt);
 
             return new PaymentIntentResponse() { ClientSecret = paymentIntent.ClientSecret };
-        }
-
-        [HttpPost("account/{paymentMethod}")]
-        public async Task<ActionResult<CreateAccountResult>> CreateConnectedAccount(string paymentMethod)
-        {
-            return Ok(Service.StripeService.CreateStripeAccount(paymentMethod));
-        }
-
-        [HttpPost("attach-payment-method")]
-        public IActionResult AttachPaymentMethod([FromBody] AttachPaymentMethodRequest attachPaymentMethodRequest)
-        {
-            try
-            {
-                // Attach the PaymentMethod to the connected account
-                var paymentMethodService = new PaymentMethodService();
-                var attachedPaymentMethod = paymentMethodService.Attach(
-                    attachPaymentMethodRequest.PaymentMethodId,
-                    new PaymentMethodAttachOptions()
-                    {
-                        Customer = "cus_OdAPzwnTLlT8CI"
-                    },
-                    requestOptions: new RequestOptions
-                    {
-                        StripeAccount = attachPaymentMethodRequest.AccountId
-                    }
-                );
-
-                // Handle success
-                return Ok("PaymentMethod attached to connected account");
-            }
-            catch (StripeException e)
-            {
-                // Handle error
-                return BadRequest($"Error: {e.Message}");
-            }
         }
     }
 }

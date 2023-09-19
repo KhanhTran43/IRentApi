@@ -1,9 +1,9 @@
-﻿ using Domain.Model.Entity;
+﻿using Domain.Model.Entity;
 using iRentApi.Controllers.Contract;
 using iRentApi.DTO;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers
@@ -12,7 +12,7 @@ namespace iRentApi.Controllers
     [ApiController]
     public class WarehouseController : CrudController<Warehouse, WarehouseDTO, CreateWarehouseDTO, WarehouseDTO>
     {
-        public WarehouseController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        public WarehouseController(IUnitOfWork serviceWrapper) : base(serviceWrapper)
         {
         }
 

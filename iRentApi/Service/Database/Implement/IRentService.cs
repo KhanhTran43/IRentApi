@@ -3,17 +3,17 @@ using Data.Context;
 using Domain.Model.Entity;
 using iRentApi.DTO;
 using iRentApi.Helpers;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database.Contract;
 using Microsoft.Extensions.Options;
 using System.Drawing;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Database.Implement
 {
     public abstract class IRentService : IService
     {
-        private IRentContext _context;
-        private IMapper _mapper;
-        private AppSettings _appSettings;
+        private readonly IRentContext _context;
+        private readonly IMapper _mapper;
+        private readonly AppSettings _appSettings;
 
         protected override IRentContext Context => _context;
         protected override IMapper Mapper => _mapper;

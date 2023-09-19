@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Data.Context;
 using iRentApi.Helpers;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database.Contract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Database.Implement
 {
     public class RentedWarehouseService : IRentedWarehouseService
     {
@@ -16,7 +16,7 @@ namespace iRentApi.Service.Implement
         public override Task<bool> CheckWarehouseRented(long warehouseId)
         {
             DateTime now = DateTime.Now;
-            return this.Context.RentedWarehouses.Where(rw => warehouseId == rw.WarehouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();
+            return Context.RentedWarehouses.Where(rw => warehouseId == rw.WarehouseId && rw.EndDate.CompareTo(now) >= 0).AnyAsync();
         }
     }
 }

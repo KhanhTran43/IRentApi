@@ -1,11 +1,10 @@
 ﻿using iRentApi.DTO.Contract;
 using iRentApi.Model.Entity.Contract;
 using iRentApi.Model.Service.Crud;
-using iRentApi.Service.Contract;
-using iRentApi.Service.ServiceException;
+using iRentApi.Service.Database;
+using iRentApi.Service.Database.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 
 namespace iRentApi.Controllers.Contract
 {
@@ -15,7 +14,7 @@ namespace iRentApi.Controllers.Contract
         where TInsert : IInsertDTO<TEntity>
         where TUpdate : IUpdateDTO<TEntity>
     {
-        public CrudController(IServiceWrapper serviceWrapper) : base(serviceWrapper)
+        public CrudController(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
@@ -58,7 +57,9 @@ namespace iRentApi.Controllers.Contract
 
             try
             {
-                var entity = await service.Insert<TSelect>(insert);
+                var entityEntry = service.Insert(insert);
+                var entity = service.MapTo<TSelect>(entityEntry.Entity);
+                await service.SaveAsync();
                 return CreatedAtAction("GetStatic", new { id = entity.Id }, entity);
             }
             catch(Exception e)
@@ -79,7 +80,8 @@ namespace iRentApi.Controllers.Contract
 
             try
             {
-                await service.Delete(id);
+                service.Delete(id);
+                await service.SaveAsync();
                 return Ok("Deleted");
             }
             catch (Exception e)

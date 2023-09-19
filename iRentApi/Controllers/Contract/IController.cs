@@ -1,11 +1,10 @@
-﻿using iRentApi.Service.Contract;
-using iRentApi.Service.Implement;
+﻿using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers.Contract
 {
     public abstract class IController : ControllerBase
     {
-        protected abstract IServiceWrapper Service { get; }
+        protected abstract IUnitOfWork Service { get; }
     }
 }

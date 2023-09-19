@@ -1,7 +1,7 @@
 ﻿using iRentApi.Controllers.Contract;
 using iRentApi.DTO;
 using iRentApi.Model.Entity;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iRentApi.Controllers
@@ -10,6 +10,6 @@ namespace iRentApi.Controllers
     [ApiController]
     public class ContractController : CrudController<ContractModel, ContractDTO, ContractDTO, ContractDTO>
     {
-        public ContractController(IServiceWrapper serviceWrapper) : base(serviceWrapper) { }
+        public ContractController(IUnitOfWork serviceWrapper) : base(serviceWrapper) { }
     }
 }

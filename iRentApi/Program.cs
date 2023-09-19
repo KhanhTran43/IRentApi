@@ -1,7 +1,8 @@
 using Data.Context;
 using iRentApi.Helpers;
-using iRentApi.Service.Contract;
-using iRentApi.Service.Implement;
+using iRentApi.Service;
+using iRentApi.Service.Database;
+using iRentApi.Service.Stripe;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System.Diagnostics;
@@ -22,7 +23,8 @@ builder.Services.AddDbContext<IRentContext>(config =>
     config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB"));
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddScoped<IServiceWrapper, ServiceWrapper>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<StripeService>();
 StripeConfiguration.ApiKey = "sk_test_51Moi0JC3H9WnnPLnb7SMrdWlrHU0SeReC003pwjYGykDNTtFUH7ykplqfy4huQrKMT17YPYgmUaINBT4GEbNC9BC006OLHU3r5";
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

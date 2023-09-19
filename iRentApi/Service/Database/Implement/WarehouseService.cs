@@ -4,11 +4,11 @@ using iRentApi.DTO;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
-using iRentApi.Service.Contract;
+using iRentApi.Service.Database.Contract;
 using Microsoft.Extensions.Options;
 using System.Linq;
 
-namespace iRentApi.Service.Implement
+namespace iRentApi.Service.Database.Implement
 {
     public class WarehouseService : IWarehouseService
     {
@@ -34,7 +34,7 @@ namespace iRentApi.Service.Implement
         public override async Task<List<WarehouseDTO>> GetRenterWarehouseList(long userId, GetStaticRequest? options = null)
         {
             var warehouseDto = await SelectAll<WarehouseDTO>(options);
-            
+
             return warehouseDto.Where(w => w.RentedInfo?.RenterId == userId).ToList();
         }
     }

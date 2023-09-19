@@ -4,7 +4,7 @@ using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using Microsoft.Extensions.Options;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database.Contract
 {
     public abstract class IPostService : IRentCRUDService<Warehouse>
     {

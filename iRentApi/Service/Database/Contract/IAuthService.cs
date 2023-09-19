@@ -3,10 +3,10 @@ using Data.Context;
 using Domain.Model.Entity;
 using iRentApi.Helpers;
 using iRentApi.Model.Http.Auth;
-using iRentApi.Service.Implement;
+using iRentApi.Service.Database.Implement;
 using Microsoft.Extensions.Options;
 
-namespace iRentApi.Service.Contract
+namespace iRentApi.Service.Database.Contract
 {
     public abstract class IAuthService : IRentService
     {
