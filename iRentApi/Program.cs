@@ -14,10 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-builder.Services.AddControllers().AddJsonOptions(options => 
-{ 
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services.AddControllers();
 builder.Services.AddDbContext<IRentContext>(config =>
 {
     config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB"));
