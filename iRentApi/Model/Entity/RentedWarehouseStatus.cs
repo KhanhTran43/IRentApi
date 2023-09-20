@@ -5,6 +5,8 @@
         None,
         Waiting,
         Rented,
+        Canceling,
+        Canceled,
         Expired,
     }
 }
