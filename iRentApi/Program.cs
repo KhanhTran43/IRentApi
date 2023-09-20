@@ -17,7 +17,7 @@ var secret = builder.Configuration.GetSection("AppSettings")["Secret"];
 builder.Services.AddControllers();
 builder.Services.AddDbContext<IRentContext>(config =>
 {
-    config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB"));
+    config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB_Cloud"));
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
