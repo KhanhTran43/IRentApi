@@ -15,7 +15,6 @@ namespace iRentApi.Service.Database.Contract
         }
 
         public abstract Task<List<WarehouseDTO>> GetOwnerWarehouseList(long userId, GetStaticRequest? options = null);
-        public abstract Task<List<WarehouseDTO>> GetRenterWarehouseList(long userId, GetStaticRequest? options = null);
         public abstract Task<TMap> AddComment<TMap>(long warehouseId, long userId, CreateWarehouseCommentDTO warehouse);
     }
 }

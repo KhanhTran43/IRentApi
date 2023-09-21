@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iRentApi.Model.Entity
 {
-    public class RentedWarehouse : EntityBase
+    public class RentedWarehouseInfo : EntityBase
     {
         public long? RenterId { get; set; }
         public User? Renter { get; set; }

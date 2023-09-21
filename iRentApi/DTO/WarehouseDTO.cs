@@ -12,7 +12,7 @@ namespace iRentApi.DTO
         public Ward Ward { get; set; }
         public string Address { get; set; }
         public decimal Price { get; set; }
-        public bool Rented { get; set; }
+        public bool? Rented { get; set; }
         public decimal Area { get; set; }
         public int Doors { get; set; }
         public int Floors { get; set; }

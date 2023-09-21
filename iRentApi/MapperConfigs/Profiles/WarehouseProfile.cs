@@ -18,7 +18,11 @@ namespace iRentApi.MapperConfigs.Profiles
                         var rentedWarehouses = src.RentedWarehouses;
                         if (rentedWarehouses != null && rentedWarehouses.Count > 0)
                         {
-                            return rentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).FirstOrDefault();
+                            return rentedWarehouses.Where(rw =>
+                                rw.Status == RentedWarehouseStatus.Waiting
+                                || rw.Status == RentedWarehouseStatus.Renting
+                                || rw.Status == RentedWarehouseStatus.Canceling)
+                            .FirstOrDefault();
                         }
                         else return null;
                     });
@@ -30,7 +34,13 @@ namespace iRentApi.MapperConfigs.Profiles
                         var rentedWarehouses = src.RentedWarehouses;
                         if (rentedWarehouses != null && rentedWarehouses.Count > 0)
                         {
-                            return rentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).Any();
+                            return rentedWarehouses
+                            .Where(rw =>
+                                rw.Status == RentedWarehouseStatus.Waiting
+                                || rw.Status == RentedWarehouseStatus.Renting
+                                || rw.Status == RentedWarehouseStatus.Canceling
+                            )
+                            .Any();
                         }
                         else return false;
                     });

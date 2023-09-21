@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using iRentApi.DTO;
+using iRentApi.MapperConfigs.ValueResolvers;
 using iRentApi.Model.Entity;
 
 namespace iRentApi.MapperConfigs.Profiles
@@ -8,9 +9,10 @@ namespace iRentApi.MapperConfigs.Profiles
     {
         public RentedWarehouseProfile()
         {
-            CreateMap<RentedWarehouse, RentedWarehouseDTO>().ReverseMap();
-            CreateMap<RentedWarehouse, RentedWarehouseInfoModel>();
-            CreateMap<CreateRentedWarehouseDTO, RentedWarehouse>();
+            CreateMap<RentedWarehouseInfo, RentedWarehouseDTO>().ConvertUsing<RentedWarehouseToRentedWarehouseDTOTypeConverter>();
+            CreateMap<Warehouse, RentedWarehouseDTO>();
+            CreateMap<RentedWarehouseInfo, RentedWarehouseInfoModel>();
+            CreateMap<CreateRentedWarehouseDTO, RentedWarehouseInfo>();
         }
     }
 }

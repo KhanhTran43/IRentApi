@@ -3,7 +3,7 @@ using iRentApi.Model.Entity;
 
 namespace iRentApi.DTO
 {
-    public class CreateRentedWarehouseDTO : IInsertDTO<RentedWarehouse>
+    public class CreateRentedWarehouseDTO : IInsertDTO<RentedWarehouseInfo>
     {
         public long Id { get; set; }
         public long RenterId { get; set; }

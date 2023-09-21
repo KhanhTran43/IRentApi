@@ -27,16 +27,6 @@ namespace iRentApi.Controllers
             return await Service.WarehouseService.GetOwnerWarehouseList(ownerId, options);
         }
 
-        [HttpPost("renter/{id}")]
-        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> GetRenterWarehouse
-        (
-            [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GetStaticRequest? options,
-            [FromRoute(Name = "id")] long userId
-        )
-        {
-            return await Service.WarehouseService.GetRenterWarehouseList(userId, options);
-        }
-
         [HttpPost("{warehouseId}/comment/{userId}")]
         public async Task<ActionResult<WarehouseCommentDTO>> AddComment([FromRoute] long warehouseId, [FromRoute] long userId, [FromBody] CreateWarehouseCommentDTO commentDTO)
         {

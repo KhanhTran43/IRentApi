@@ -7,7 +7,7 @@ namespace iRentApi.Model.Entity
     public class ContractModel : EntityBase 
     {
         public long RentedWarehouseId { get; set; }
-        public RentedWarehouse RentedWarehouse { get; set; }
+        public RentedWarehouseInfo RentedWarehouse { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Base64 { get; set; }

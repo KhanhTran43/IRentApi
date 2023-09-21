@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="MapperConfigs\TypeConverters\" />
-    <Folder Include="MapperConfigs\ValueResolvers\" />
   </ItemGroup>
 
 </Project>

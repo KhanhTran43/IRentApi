@@ -4,9 +4,10 @@
     {
         None,
         Waiting,
-        Rented,
+        Renting,
         Canceling,
         Canceled,
         Expired,
+        Ended,
     }
 }

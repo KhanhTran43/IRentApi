@@ -5,6 +5,7 @@ using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database.Contract;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Linq;
 
@@ -29,13 +30,6 @@ namespace iRentApi.Service.Database.Implement
         public override Task<List<WarehouseDTO>> GetOwnerWarehouseList(long userId, GetStaticRequest? options = null)
         {
             return SelectAll<WarehouseDTO>(options, warehoue => warehoue.UserId == userId);
-        }
-
-        public override async Task<List<WarehouseDTO>> GetRenterWarehouseList(long userId, GetStaticRequest? options = null)
-        {
-            var warehouseDto = await SelectAll<WarehouseDTO>(options);
-
-            return warehouseDto.Where(w => w.RentedInfo?.RenterId == userId).ToList();
         }
     }
 }

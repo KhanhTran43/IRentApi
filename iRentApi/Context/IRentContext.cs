@@ -29,7 +29,7 @@ namespace Data.Context
         public DbSet<WarehouseComment> Comments { get; set; }
         public DbSet<ContractModel> Contracts { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<RentedWarehouse> RentedWarehouses { get; set; }
+        public DbSet<RentedWarehouseInfo> RentedWarehouseInfos { get; set; }
         public DbSet<WarehouseComment> WarehouseComments { get; set; }
         public DbSet<WarehouseCommentLike> WarehouseCommentLikes { get; set; }
         public DbSet<WarehouseImage> WarehouseImages { get; set; }

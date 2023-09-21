@@ -3,13 +3,20 @@ using iRentApi.Model.Entity;
 
 namespace iRentApi.DTO
 {
-    public class RentedWarehouseDTO : ISelectDTO<RentedWarehouse>, IInsertDTO<RentedWarehouse>, IUpdateDTO<RentedWarehouse>
+    public class RentedWarehouseDTO : ISelectDTO<RentedWarehouseInfo>, IInsertDTO<RentedWarehouseInfo>, IUpdateDTO<RentedWarehouseInfo>
     {
         public long Id { get; set; }
-        public long RenterId { get; set; }
-        public long WarehouseId { get; set; }
-        public DateTime RentedDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public string ContractBase64 { get; set; }
+        public long UserId { get; set; }
+        public string Name { get; set; }
+        public Ward Ward { get; set; }
+        public string Address { get; set; }
+        public decimal Price { get; set; }
+        public bool Rented { get; set; }
+        public decimal Area { get; set; }
+        public int Doors { get; set; }
+        public int Floors { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public RentedWarehouseInfoModel? RentedInfo { get; set; }
+        public List<ClientWarehouseImage> Images { get; set; } = new List<ClientWarehouseImage>();
     }
 }
