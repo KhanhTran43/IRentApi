@@ -19,37 +19,5 @@ namespace iRentApi.Model.Entity
         public ICollection<RentedWarehouse> RentedWarehouses { get; set; }
         public ICollection<WarehouseComment> Comments { get; set; }
         public ICollection<WarehouseImage> Images { get; set; }
-
-        //public bool GetRented()
-        //{
-        //    if (RentedWarehouses != null)
-        //    {
-        //        if (RentedWarehouses.Count > 0)
-        //        {
-        //            return RentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).Any();
-        //        }
-        //        else return false;
-        //    }
-        //    else return false;
-        //}
-
-        //public RentedWarehouseInfoModel? GetRentedInfo()
-        //{
-        //    if (RentedWarehouses != null && RentedWarehouses.Count > 0)
-        //    {
-        //        var activedRentedWarehouse = RentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).FirstOrDefault();
-
-        //        if(activedRentedWarehouse != null)
-        //            return new RentedWarehouseInfoModel() { 
-        //                EndDate = activedRentedWarehouse.EndDate, 
-        //                RentedDate = activedRentedWarehouse.RentedDate, 
-        //                RenterId = activedRentedWarehouse.RenterId, 
-        //                ContractBase64 = activedRentedWarehouse.ContractBase64 
-        //            };
-        //        else 
-        //            return null;
-        //    }
-        //    else return null;
-        //}
     }
 }

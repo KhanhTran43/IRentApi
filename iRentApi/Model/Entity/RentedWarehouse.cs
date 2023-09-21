@@ -12,7 +12,7 @@ namespace iRentApi.Model.Entity
         public long WarehouseId { get; set; }
         public Warehouse Warehouse { get; set; }
         public DateTime RentedDate { get; set; }
-        public DateTime ConfirmDate { get; set; }
+        public DateTime? ConfirmDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal Total { get; set; }

@@ -6,7 +6,7 @@ namespace iRentApi.DTO
     {
         public long? RenterId { get; set; }
         public DateTime RentedDate { get; set; }
-        public DateTime ConfirmDate { get; set; }
+        public DateTime? ConfirmDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal Total { get; set; }
