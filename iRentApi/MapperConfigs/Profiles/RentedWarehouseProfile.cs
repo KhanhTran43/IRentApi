@@ -9,6 +9,7 @@ namespace iRentApi.MapperConfigs.Profiles
         public RentedWarehouseProfile()
         {
             CreateMap<RentedWarehouse, RentedWarehouseDTO>().ReverseMap();
+            CreateMap<RentedWarehouse, RentedWarehouseInfoModel>();
             CreateMap<CreateRentedWarehouseDTO, RentedWarehouse>();
         }
     }

@@ -10,7 +10,32 @@ namespace iRentApi.MapperConfigs.Profiles
     {
         public WarehouseProfile()
         {
-            CreateMap<Warehouse, WarehouseDTO>().ReverseMap();
+            CreateMap<Warehouse, WarehouseDTO>()
+                .ForMember(dest => dest.RentedInfo, opt =>
+                {
+                    opt.MapFrom((src, dest) =>
+                    {
+                        var rentedWarehouses = src.RentedWarehouses;
+                        if (rentedWarehouses != null && rentedWarehouses.Count > 0)
+                        {
+                            return rentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).FirstOrDefault();
+                        }
+                        else return null;
+                    });
+                })
+                .ForMember(dest => dest.Rented, opt =>
+                {
+                    opt.MapFrom((src, dest) =>
+                    {
+                        var rentedWarehouses = src.RentedWarehouses;
+                        if (rentedWarehouses != null && rentedWarehouses.Count > 0)
+                        {
+                            return rentedWarehouses.Where(rw => rw.EndDate.CompareTo(DateTime.Now) >= 0).Any();
+                        }
+                        else return false;
+                    });
+                })
+                .ReverseMap();
             CreateMap<CreateWarehouseDTO, Warehouse>();
         }
     }
