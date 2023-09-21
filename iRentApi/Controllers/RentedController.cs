@@ -8,7 +8,7 @@ namespace iRentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentedWarehouseController : CrudController<RentedWarehouse, RentedWarehouseDTO, RentedWarehouseDTO, RentedWarehouseDTO>
+    public class RentedWarehouseController : CrudController<RentedWarehouse, RentedWarehouseDTO, CreateRentedWarehouseDTO, RentedWarehouseDTO>
     {
         public RentedWarehouseController(IUnitOfWork serviceWrapper) : base(serviceWrapper)
         {

@@ -1,16 +1,10 @@
-﻿ using Domain.Model.Entity;
-using iRentApi.Model.Entity.Contract;
-using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using iRentApi.Model.Entity;
 
-namespace iRentApi.Model.Entity
+namespace iRentApi.DTO
 {
-    public class RentedWarehouse : EntityBase
+    public class RentedWarehouseInfoModel
     {
         public long? RenterId { get; set; }
-        public User? Renter { get; set; }
-        public long WarehouseId { get; set; }
-        public Warehouse Warehouse { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime ConfirmDate { get; set; }
         public DateTime StartDate { get; set; }
