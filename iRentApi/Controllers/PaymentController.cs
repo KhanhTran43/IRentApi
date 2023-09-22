@@ -61,7 +61,7 @@ namespace iRentApi.Controllers
                     paymentMethod = paymentMethods.First().Id;
             }
 
-            int totalAmount = request.Amount * 1000;
+            long totalAmount = (long)request.Amount * 1000;
             double fee = totalAmount * 0.02;
             double stripePercentageFee = 0.029; // Stripe's percentage fee (2.9%)
             double stripeFixedFee = 0.3; // Stripe's fixed fee in cents (30 cents)
