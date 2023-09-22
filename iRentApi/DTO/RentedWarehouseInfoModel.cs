@@ -4,6 +4,7 @@ namespace iRentApi.DTO
 {
     public class RentedWarehouseInfoModel
     {
+        public long Id { get; set; }
         public long? RenterId { get; set; }
         public DateTime RentedDate { get; set; }
         public DateTime? ConfirmDate { get; set; }

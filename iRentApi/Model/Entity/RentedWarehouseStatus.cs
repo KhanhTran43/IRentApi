@@ -9,5 +9,6 @@
         Canceled,
         Expired,
         Ended,
+        Confirmed,
     }
 }

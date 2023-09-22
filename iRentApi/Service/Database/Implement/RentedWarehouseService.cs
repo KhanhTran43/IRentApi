@@ -6,6 +6,7 @@ using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database.Contract;
+using iRentApi.Service.Database.Exception;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
@@ -34,6 +35,17 @@ namespace iRentApi.Service.Database.Implement
         public override Task<List<RentedWarehouseDTO>> GetRenterWarehouseList(long userId, GetStaticRequest? options = null)
         {
             return SelectAll<RentedWarehouseDTO>(options, rentedWarehouseInfo => rentedWarehouseInfo.RenterId == userId);
+        }
+
+        public override async Task Confirm(long rentedWarehouseId)
+        {
+            var rentedWarehouse = await Context.RentedWarehouseInfos.FindAsync(rentedWarehouseId) ?? throw new EntityNotFoundException();
+            if (rentedWarehouse.Status == RentedWarehouseStatus.Waiting)
+            {
+                rentedWarehouse.Status = RentedWarehouseStatus.Confirmed;
+                Context.SaveChanges();
+            }
+            else throw new InvalidOperationException("Invalid confirm action");
         }
     }
 }

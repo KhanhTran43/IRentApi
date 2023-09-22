@@ -31,5 +31,18 @@ namespace iRentApi.Controllers
         {
             return await Service.RentedWarehouseService.GetRenterWarehouseList(userId, options);
         }
+
+        [HttpPatch("confirm/{id}")]
+        public async Task<IActionResult> ConfirmRentedWarehouse([FromRoute(Name = "id")] long rentedWarehouseId)
+        {
+            try
+            {
+                await Service.RentedWarehouseService.Confirm(rentedWarehouseId);
+                return Ok("Confirmed");
+            } 
+            catch (Exception ex) {
+                return Problem(ex.Message);
+            }
+        }
     }
 }
