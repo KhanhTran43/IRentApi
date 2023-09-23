@@ -23,7 +23,7 @@ namespace iRentApi.Controllers
             var services = new PaymentIntentService();
             var opt = new PaymentIntentCreateOptions()
             {
-                Amount = request.Amount * 1000,
+                Amount = (long)request.Amount * 1000,
                 Currency = "VND",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions()
                 {

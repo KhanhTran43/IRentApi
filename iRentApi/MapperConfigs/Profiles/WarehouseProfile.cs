@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Model.Entity;
 using iRentApi.DTO;
+using iRentApi.Helpers;
 using iRentApi.MapperConfigs.TypeConverters;
 using iRentApi.Model.Entity;
 
@@ -19,9 +20,7 @@ namespace iRentApi.MapperConfigs.Profiles
                         if (rentedWarehouses != null && rentedWarehouses.Count > 0)
                         {
                             return rentedWarehouses.Where(rw =>
-                                rw.Status == RentedWarehouseStatus.Waiting
-                                || rw.Status == RentedWarehouseStatus.Renting
-                                || rw.Status == RentedWarehouseStatus.Canceling)
+                                RentedWarehouseUtility.IsRentingStatus(rw.Status))
                             .FirstOrDefault();
                         }
                         else return null;
@@ -36,9 +35,7 @@ namespace iRentApi.MapperConfigs.Profiles
                         {
                             return rentedWarehouses
                             .Where(rw =>
-                                rw.Status == RentedWarehouseStatus.Waiting
-                                || rw.Status == RentedWarehouseStatus.Renting
-                                || rw.Status == RentedWarehouseStatus.Canceling
+                                RentedWarehouseUtility.IsRentingStatus(rw.Status)
                             )
                             .Any();
                         }

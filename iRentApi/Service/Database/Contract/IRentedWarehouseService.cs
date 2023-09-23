@@ -15,7 +15,10 @@ namespace iRentApi.Service.Database.Contract
         }
 
         public abstract Task<bool> CheckWarehouseRented(long warehouseId);
-        public abstract Task<List<RentedWarehouseDTO>> GetRenterWarehouseList(long userId, GetStaticRequest? options = null);
+        public abstract Task<List<RentedWarehouseDTO>> GetRenterRentedWarehouseList(long userId, GetStaticRequest? options = null);
+        public abstract Task<List<RentedWarehouseDTO>> GetOwnerRentedWarehouseList(long userId, GetStaticRequest? options = null);
         public abstract Task Confirm(long rentedWarehouseId);
+        public abstract Task RequestCancel(long rentedWarehouseId);
+        public abstract Task ConfirmCancel(long rentedWarehouseId);
     }
 }
