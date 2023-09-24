@@ -17,7 +17,7 @@ var secret = builder.Configuration.GetSection("AppSettings")["Secret"];
 builder.Services.AddControllers();
 builder.Services.AddDbContext<IRentContext>(config =>
 {
-    config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB"));
+    config.UseSqlServer(builder.Configuration.GetConnectionString("IRentDB_Cloud"));
 });
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -55,7 +55,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(options =>
 {
-    options.WithOrigins("http://localhost:4200", "http://localhost:4201").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+    options.WithOrigins("http://localhost:4200", "http://localhost:4201", "https://irent-gamma.vercel.app", "https://irent-admin.vercel.app/#/warehouse").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
 });
 
 app.UseHttpsRedirection();
