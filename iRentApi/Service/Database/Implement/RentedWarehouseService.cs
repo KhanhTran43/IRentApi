@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.Context;
+using Humanizer;
 using iRentApi.DTO;
 using iRentApi.DTO.Contract;
 using iRentApi.Helpers;
@@ -85,6 +86,21 @@ namespace iRentApi.Service.Database.Implement
             }
             else
                 throw new InvalidOperationException("Invalid cancel confirm action");
+        }
+
+        public override async Task ResolveAllStatus()
+        {
+            var now = DateTime.Now.AtMidnight();
+
+            var expiredWarehouse = Context.RentedWarehouseInfos
+                .Where(rwi => rwi.Status == RentedWarehouseStatus.Waiting && rwi.StartDate.CompareTo(now) >= 0).ToList();
+            expiredWarehouse.ForEach(ew => ew.Status = RentedWarehouseStatus.Expired);
+
+            var rentingWarehouse = Context.RentedWarehouseInfos
+                .Where(rwi => rwi.Status == RentedWarehouseStatus.Confirmed && rwi.StartDate.CompareTo(now) >= 0).ToList();
+            rentingWarehouse.ForEach(ew => ew.Status = RentedWarehouseStatus.Renting);
+
+            Context.SaveChanges();
         }
     }
 }

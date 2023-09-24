@@ -20,5 +20,6 @@ namespace iRentApi.Service.Database.Contract
         public abstract Task Confirm(long rentedWarehouseId);
         public abstract Task RequestCancel(long rentedWarehouseId);
         public abstract Task ConfirmCancel(long rentedWarehouseId);
+        public abstract Task ResolveAllStatus();
     }
 }
