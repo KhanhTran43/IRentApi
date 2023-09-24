@@ -18,6 +18,7 @@ namespace iRentApi.Model.Entity
         public decimal Total { get; set; }
         public decimal Confirm { get; set; }
         public decimal Deposit { get; set; }
+        public string DepositPayment { get; set; }
         public RentedWarehouseStatus Status { get; set; }
         public string ContractBase64 { get; set; }
     }

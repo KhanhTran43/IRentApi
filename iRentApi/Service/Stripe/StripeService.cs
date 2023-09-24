@@ -85,5 +85,35 @@ namespace iRentApi.Service.Stripe
 
             return new CreateAccountResult() { AccountId = account.Id, CustomerId = customer.Id };
         }
+        public string Refund(string paymentItent)
+        {
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntent = paymentIntentService.Get(paymentItent);
+
+            string transferGroup = paymentIntent.TransferGroup;
+
+            var transferOptions = new TransferListOptions
+            {
+                TransferGroup = transferGroup,
+            };
+
+            var transferService = new TransferService();
+            var transfers = transferService.List(transferOptions);
+
+            var transfer = transfers.ToList().First();
+
+            var refundAmount = transfer.Amount;
+
+            var options = new TransferReversalCreateOptions
+            {
+                Amount = refundAmount,
+                Description = "Refund for Transfer"
+            };
+
+            var service = new TransferReversalService();
+            TransferReversal reversal = service.Create(transfer.Id, options);
+
+            return reversal.Id;
+        }
     }
 }

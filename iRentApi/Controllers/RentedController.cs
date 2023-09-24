@@ -3,6 +3,7 @@ using iRentApi.DTO;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database;
+using iRentApi.Service.Stripe;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -13,8 +14,10 @@ namespace iRentApi.Controllers
     [ApiController]
     public class RentedWarehouseController : CrudController<RentedWarehouseInfo, RentedWarehouseDTO, CreateRentedWarehouseDTO, RentedWarehouseDTO>
     {
-        public RentedWarehouseController(IUnitOfWork serviceWrapper) : base(serviceWrapper)
+        StripeService StripeService { get; }
+        public RentedWarehouseController(IUnitOfWork serviceWrapper, StripeService stripeService) : base(serviceWrapper)
         {
+            StripeService = stripeService;
         }
 
         [HttpGet("{warehouseId}/rented")]
@@ -78,7 +81,16 @@ namespace iRentApi.Controllers
             try
             {
                 await Service.RentedWarehouseService.ConfirmCancel(rentedWarehouseId);
-                return Ok("Cancel Confirmed");
+                var rentedWarehouseInfo = await Service.RentedWarehouseService.SelectByID(rentedWarehouseId);
+                if (rentedWarehouseInfo.DepositPayment != null)
+                {
+                    var reverseTransfer = StripeService.Refund(rentedWarehouseInfo.DepositPayment);
+                    return Ok($"Cancel Confirmed: {reverseTransfer}");
+                }
+                else
+                {
+                    return Ok($"Cancel Confirmed");
+                } 
             }
             catch (Exception ex)
             {

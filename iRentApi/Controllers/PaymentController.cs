@@ -89,5 +89,11 @@ namespace iRentApi.Controllers
 
             return new PaymentIntentResponse() { ClientSecret = paymentIntent.ClientSecret };
         }
+
+        [HttpPost("refund/{id}")]
+        public async Task<ActionResult<string>> Refund([FromRoute] string id)
+        {
+            return StripeService.Refund(id);
+        }
     }
 }
