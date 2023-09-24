@@ -17,6 +17,7 @@ namespace iRentApi.Model.Entity
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Description { get; set; }
+        public string? RejectedReason { get; set; }
         public WarehouseStatus Status { get; set; } = WarehouseStatus.Pending;
         public ICollection<RentedWarehouseInfo> RentedWarehouses { get; set; }
         public ICollection<WarehouseComment> Comments { get; set; }

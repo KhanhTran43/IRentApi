@@ -29,12 +29,18 @@ namespace iRentApi.Service.Database.Implement
             return Mapper.Map<WarehouseComment, TMap>(entityEntry.Entity);
         }
 
-        public override async Task ConfirmWarehouse(long warehouseId, WarehouseStatus status)
+        public override async Task ConfirmWarehouse(long warehouseId, WarehouseStatus status, string? rejectedReson = null)
         {
-            var rentedWarehouse = await Context.Warehouses.FindAsync(warehouseId) ?? throw new EntityNotFoundException();
-            if (status != WarehouseStatus.Pending && rentedWarehouse.Status == WarehouseStatus.Pending)
+            var warehouse = await Context.Warehouses.FindAsync(warehouseId) ?? throw new EntityNotFoundException();
+            if (status != WarehouseStatus.Pending && warehouse.Status == WarehouseStatus.Pending)
             {
-                rentedWarehouse.Status = status;
+                warehouse.Status = status;
+
+                if(status == WarehouseStatus.Rejected && !string.IsNullOrEmpty(rejectedReson))
+                {
+                    warehouse.RejectedReason = rejectedReson;
+                }
+
                 Context.SaveChanges();
             }
             else

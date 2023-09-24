@@ -2,6 +2,7 @@
 using iRentApi.Controllers.Contract;
 using iRentApi.DTO;
 using iRentApi.Model.Entity;
+using iRentApi.Model.Http.Warehouse;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database;
 using Microsoft.AspNetCore.Mvc;
@@ -31,13 +32,13 @@ namespace iRentApi.Controllers
         public async Task<ActionResult<IEnumerable<WarehouseDTO>>> ConfirmWarehouse
         (
             [FromRoute(Name = "id")] long warehouseId,
-            [FromBody] WarehouseStatus status
+            [FromBody] ConfirmWarehouseRequest request
         )
         {
             try
             {
-                await Service.WarehouseService.ConfirmWarehouse(warehouseId, status);
-                return Ok($"Warehouse {status}");
+                await Service.WarehouseService.ConfirmWarehouse(warehouseId, request.Status, request.RejectedReason);
+                return Ok($"Warehouse {request.Status}");
             }
             catch (Exception ex)
             {
