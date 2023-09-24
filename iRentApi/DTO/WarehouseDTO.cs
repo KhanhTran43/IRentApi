@@ -17,6 +17,8 @@ namespace iRentApi.DTO
         public int Doors { get; set; }
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string Description { get; set; }
+        public WarehouseStatus Status { get; set; }
         public RentedWarehouseInfoModel? RentedInfo { get; set; }
         public List<WarehouseCommentDTO> Comments { get; set; } = new List<WarehouseCommentDTO>();
         public List<ClientWarehouseImage> Images { get; set; } = new List<ClientWarehouseImage>();

@@ -27,6 +27,26 @@ namespace iRentApi.Controllers
             return await Service.WarehouseService.GetOwnerWarehouseList(ownerId, options);
         }
 
+        [HttpPatch("confirm/{id}")]
+        public async Task<ActionResult<IEnumerable<WarehouseDTO>>> ConfirmWarehouse
+        (
+            [FromRoute(Name = "id")] long warehouseId,
+            [FromBody] WarehouseStatus status
+        )
+        {
+            try
+            {
+                await Service.WarehouseService.ConfirmWarehouse(warehouseId, status);
+                return Ok($"Warehouse {status}");
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+
+
         [HttpPost("{warehouseId}/comment/{userId}")]
         public async Task<ActionResult<WarehouseCommentDTO>> AddComment([FromRoute] long warehouseId, [FromRoute] long userId, [FromBody] CreateWarehouseCommentDTO commentDTO)
         {

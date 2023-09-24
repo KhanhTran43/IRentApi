@@ -16,8 +16,17 @@ namespace iRentApi.Model.Entity
         public int Doors { get; set; }
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string Description { get; set; }
+        public WarehouseStatus Status { get; set; } = WarehouseStatus.Pending;
         public ICollection<RentedWarehouseInfo> RentedWarehouses { get; set; }
         public ICollection<WarehouseComment> Comments { get; set; }
         public ICollection<WarehouseImage> Images { get; set; }
+    }
+
+    public enum WarehouseStatus
+    {
+        Pending,
+        Accepted,
+        Rejected,
     }
 }

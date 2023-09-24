@@ -14,6 +14,7 @@ namespace iRentApi.DTO
         public int Doors { get; set; }
         public int Floors { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string Description { get; set; }
         public List<ClientWarehouseImage> Images { get; set; } = new List<ClientWarehouseImage>();
     }
 }

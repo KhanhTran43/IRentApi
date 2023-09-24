@@ -4,6 +4,7 @@ using iRentApi.DTO;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace iRentApi.Service.Database.Contract
@@ -16,5 +17,6 @@ namespace iRentApi.Service.Database.Contract
 
         public abstract Task<List<WarehouseDTO>> GetOwnerWarehouseList(long userId, GetStaticRequest? options = null);
         public abstract Task<TMap> AddComment<TMap>(long warehouseId, long userId, CreateWarehouseCommentDTO warehouse);
+        public abstract Task ConfirmWarehouse(long warehouseId, WarehouseStatus status);
     }
 }

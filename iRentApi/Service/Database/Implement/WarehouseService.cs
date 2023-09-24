@@ -5,6 +5,8 @@ using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database.Contract;
+using iRentApi.Service.Database.Exception;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Linq;
@@ -25,6 +27,18 @@ namespace iRentApi.Service.Database.Implement
             entityEntry.Reference(entity => entity.User).Load();
 
             return Mapper.Map<WarehouseComment, TMap>(entityEntry.Entity);
+        }
+
+        public override async Task ConfirmWarehouse(long warehouseId, WarehouseStatus status)
+        {
+            var rentedWarehouse = await Context.Warehouses.FindAsync(warehouseId) ?? throw new EntityNotFoundException();
+            if (status != WarehouseStatus.Pending && rentedWarehouse.Status == WarehouseStatus.Pending)
+            {
+                rentedWarehouse.Status = status;
+                Context.SaveChanges();
+            }
+            else
+                throw new InvalidOperationException("Invalid confirm warehouse action");
         }
 
         public override Task<List<WarehouseDTO>> GetOwnerWarehouseList(long userId, GetStaticRequest? options = null)
