@@ -93,11 +93,11 @@ namespace iRentApi.Service.Database.Implement
             var now = DateTime.Now.AtMidnight();
 
             var expiredWarehouse = Context.RentedWarehouseInfos
-                .Where(rwi => rwi.Status == RentedWarehouseStatus.Waiting && rwi.StartDate.CompareTo(now) >= 0).ToList();
+                .Where(rwi => rwi.Status == RentedWarehouseStatus.Waiting && rwi.StartDate.CompareTo(now) <= 0).ToList();
             expiredWarehouse.ForEach(ew => ew.Status = RentedWarehouseStatus.Expired);
 
             var rentingWarehouse = Context.RentedWarehouseInfos
-                .Where(rwi => rwi.Status == RentedWarehouseStatus.Confirmed && rwi.StartDate.CompareTo(now) >= 0).ToList();
+                .Where(rwi => rwi.Status == RentedWarehouseStatus.Confirmed && rwi.StartDate.CompareTo(now) <= 0).ToList();
             rentingWarehouse.ForEach(ew => ew.Status = RentedWarehouseStatus.Renting);
 
             Context.SaveChanges();
