@@ -17,5 +17,6 @@ namespace iRentApi.DTO
         public string DepositPayment { get; set; }
         public RentedWarehouseStatus Status { get; set; } = RentedWarehouseStatus.Waiting;
         public string ContractBase64 { get; set; }
+        public string Hash { get; set; }
     }
 }

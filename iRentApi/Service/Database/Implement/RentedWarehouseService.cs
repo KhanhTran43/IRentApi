@@ -11,6 +11,8 @@ using iRentApi.Service.Database.Exception;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace iRentApi.Service.Database.Implement
 {
@@ -101,6 +103,43 @@ namespace iRentApi.Service.Database.Implement
             rentingWarehouse.ForEach(ew => ew.Status = RentedWarehouseStatus.Renting);
 
             Context.SaveChanges();
+        }
+
+        public override VerifyContractResult VerifyContract(string hash, string key)
+        {
+            var result = new VerifyContractResult();
+            var rentedWarehouseInfo = Context.RentedWarehouseInfos.Include(rwi => rwi.Warehouse).SingleOrDefault(rwi => rwi.Hash == hash);
+            if(rentedWarehouseInfo == null)
+            {
+                return result;
+            } else
+            {
+                result.RentedWarehouseInfo = rentedWarehouseInfo;
+                var dataToHash = $"{rentedWarehouseInfo.RenterId}.{rentedWarehouseInfo.WarehouseId}.{rentedWarehouseInfo.RentedDate.ToString("dd-MM-yyyy")}.{key}";
+                using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(AppSettings.ContractSecret)))
+                {
+                    byte[] dataBytes = Encoding.UTF8.GetBytes(dataToHash);
+                    byte[] hmacBytes = hmac.ComputeHash(dataBytes);
+
+                    string fullHashHex = BitConverter.ToString(hmacBytes).Replace("-", string.Empty);
+
+                    string truncatedHash = fullHashHex.Substring(0, 16);
+
+                    // Truncate the received hash to the same length as the original
+                    string receivedTruncatedHash = hash.Substring(0, 16); // Adjust the length as needed
+
+                    // Compare the truncated received hash with the truncated calculated hash
+                    if (receivedTruncatedHash.Equals(truncatedHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        result.IsValid = true;
+                    }
+                    else
+                    {
+                        result.IsValid = false;
+                    }
+                }
+                return result;
+            }
         }
     }
 }

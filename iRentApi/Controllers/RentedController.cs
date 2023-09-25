@@ -1,6 +1,7 @@
 ﻿using iRentApi.Controllers.Contract;
 using iRentApi.DTO;
 using iRentApi.Model.Entity;
+using iRentApi.Model.Http.RentedWarehouse;
 using iRentApi.Model.Service.Crud;
 using iRentApi.Service.Database;
 using iRentApi.Service.Stripe;
@@ -122,6 +123,18 @@ namespace iRentApi.Controllers
             {
                 return Problem(ex.Message);
             }
+        }
+
+        [HttpPost("verify/contract")]
+        public async Task<ActionResult<VerifiedContractResponse>> VerifyContract([FromBody] VerifyContractRequest request)
+        {
+            var verifyResult = Service.RentedWarehouseService.VerifyContract(request.Hash, request.Key);
+
+            var response = new VerifiedContractResponse() { IsValid = verifyResult.IsValid};
+
+            var infoDto = Service.RentedWarehouseService.MapTo<RentedWarehouseDTO>(verifyResult.RentedWarehouseInfo);
+            if(infoDto != null) response.RentedWarehouse = infoDto;
+            return Ok(response);
         }
     }
 }

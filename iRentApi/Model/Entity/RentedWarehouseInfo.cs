@@ -21,5 +21,6 @@ namespace iRentApi.Model.Entity
         public string DepositPayment { get; set; }
         public RentedWarehouseStatus Status { get; set; }
         public string ContractBase64 { get; set; }
+        public string Hash { get; set; }
     }
 }
