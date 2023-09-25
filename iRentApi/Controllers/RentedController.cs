@@ -97,5 +97,31 @@ namespace iRentApi.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [Authorize(Roles = nameof(Role.Renter))]
+        [HttpPatch("cancel/{id}")]
+        public async Task<IActionResult> CancelWarehouse([FromRoute(Name = "id")] long rentedWarehouseId)
+        {
+            try
+            {
+                //await Service.RentedWarehouseService.RequestCancel(rentedWarehouseId);
+                var rentedWarehouseInfo = await Service.RentedWarehouseService.SelectByID(rentedWarehouseId);
+                if (!String.IsNullOrEmpty(rentedWarehouseInfo.DepositPayment))
+                {
+                    var reverseTransfer = StripeService.Refund(rentedWarehouseInfo.DepositPayment);
+                    await Service.RentedWarehouseService.ConfirmCancel(rentedWarehouseId);
+                    return Ok($"Cancel Confirmed: {reverseTransfer}");
+                }
+                else
+                {
+                    await Service.RentedWarehouseService.ConfirmCancel(rentedWarehouseId);
+                    return Ok($"Cancel Confirmed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
     }
 }
