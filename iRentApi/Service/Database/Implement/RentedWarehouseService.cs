@@ -123,10 +123,10 @@ namespace iRentApi.Service.Database.Implement
 
                     string fullHashHex = BitConverter.ToString(hmacBytes).Replace("-", string.Empty);
 
-                    string truncatedHash = fullHashHex.Substring(0, 16);
+                    string truncatedHash = fullHashHex.Substring(0, 30);
 
                     // Truncate the received hash to the same length as the original
-                    string receivedTruncatedHash = hash.Substring(0, 16); // Adjust the length as needed
+                    string receivedTruncatedHash = hash.Substring(0, 30); // Adjust the length as needed
 
                     // Compare the truncated received hash with the truncated calculated hash
                     if (receivedTruncatedHash.Equals(truncatedHash, StringComparison.OrdinalIgnoreCase))
@@ -140,6 +140,27 @@ namespace iRentApi.Service.Database.Implement
                 }
                 return result;
             }
+        }
+
+        public override async Task ExtendRenting<TExtendRentingModel>(long rentedWarehouseID, TExtendRentingModel extend)
+        {
+            var rentedWarehouseInfo = Context.RentedWarehouseInfos.Find(rentedWarehouseID);
+            if(rentedWarehouseInfo == null)
+            {
+                throw new EntityNotFoundException();
+            }
+            var extendEntity = Mapper.Map<RentingExtend>(extend);
+
+            rentedWarehouseInfo.EndDate = extend.NewEndDate;
+            rentedWarehouseInfo.ContractBase64 = extend.NewContractBase64;
+            rentedWarehouseInfo.Hash = extend.Hash;
+            rentedWarehouseInfo.Total += extend.Total;
+
+            extendEntity.RentedWarehouseInfoId = rentedWarehouseInfo.Id;
+
+            Context.RentingExtends.Add(extendEntity);
+
+            Context.SaveChanges();
         }
     }
 }

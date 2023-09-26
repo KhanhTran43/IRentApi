@@ -22,5 +22,6 @@ namespace iRentApi.Model.Entity
         public RentedWarehouseStatus Status { get; set; }
         public string ContractBase64 { get; set; }
         public string Hash { get; set; }
+        public ICollection<RentingExtend>? Extends { get; set; }
     }
 }

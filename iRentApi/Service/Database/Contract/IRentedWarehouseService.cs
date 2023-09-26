@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Context;
 using iRentApi.DTO;
+using iRentApi.DTO.Contract;
 using iRentApi.Helpers;
 using iRentApi.Model.Entity;
 using iRentApi.Model.Service.Crud;
@@ -22,5 +23,6 @@ namespace iRentApi.Service.Database.Contract
         public abstract Task ConfirmCancel(long rentedWarehouseId);
         public abstract Task ResolveAllStatus();
         public abstract VerifyContractResult VerifyContract(string hash, string key);
+        public abstract Task ExtendRenting<TExtendRentingModel>(long rentedWarehouseID, TExtendRentingModel extend) where TExtendRentingModel : class, ICreateExtendRentingDTO;
     }
 }

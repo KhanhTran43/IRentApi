@@ -13,6 +13,8 @@ namespace iRentApi.MapperConfigs.Profiles
             CreateMap<Warehouse, RentedWarehouseDTO>();
             CreateMap<RentedWarehouseInfo, RentedWarehouseInfoModel>();
             CreateMap<CreateRentedWarehouseDTO, RentedWarehouseInfo>();
+            CreateMap<CreateExtendRentingDTO, RentingExtend>();
+            CreateMap<RentingExtend, RentingExtendDTO>();
         }
     }
 }

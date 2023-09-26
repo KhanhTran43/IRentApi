@@ -125,7 +125,7 @@ namespace iRentApi.Controllers
             }
         }
 
-        [HttpPost("verify/contract")]
+        [HttpPatch("verify/contract")]
         public async Task<ActionResult<VerifiedContractResponse>> VerifyContract([FromBody] VerifyContractRequest request)
         {
             var verifyResult = Service.RentedWarehouseService.VerifyContract(request.Hash, request.Key);
@@ -135,6 +135,21 @@ namespace iRentApi.Controllers
             var infoDto = Service.RentedWarehouseService.MapTo<RentedWarehouseDTO>(verifyResult.RentedWarehouseInfo);
             if(infoDto != null) response.RentedWarehouse = infoDto;
             return Ok(response);
+        }
+
+        [Authorize(Roles = nameof(Role.Renter))]
+        [HttpPut("extend/{rentedWarehouseId}")]
+        public async Task<IActionResult> ExtendRenting([FromRoute] long rentedWarehouseId, [FromBody] CreateExtendRentingDTO extend)
+        {
+            try
+            {
+                await Service.RentedWarehouseService.ExtendRenting(rentedWarehouseId, extend);
+                return Ok("Extended");
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
         }
     }
 }

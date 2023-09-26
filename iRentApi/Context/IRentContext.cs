@@ -33,5 +33,6 @@ namespace Data.Context
         public DbSet<WarehouseComment> WarehouseComments { get; set; }
         public DbSet<WarehouseCommentLike> WarehouseCommentLikes { get; set; }
         public DbSet<WarehouseImage> WarehouseImages { get; set; }
+        public DbSet<RentingExtend> RentingExtends { get; set; }
     }
 }

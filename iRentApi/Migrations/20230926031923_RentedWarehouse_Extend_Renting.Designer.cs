@@ -4,6 +4,7 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace iRentApi.Migrations
 {
     [DbContext(typeof(IRentContext))]
-    partial class IRentContextModelSnapshot : ModelSnapshot
+    [Migration("20230926031923_RentedWarehouse_Extend_Renting")]
+    partial class RentedWarehouse_Extend_Renting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,10 +182,6 @@ namespace iRentApi.Migrations
 
                     b.Property<DateTime>("ExtendDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("RentedWarehouseInfoId")
                         .HasColumnType("bigint");
