@@ -102,7 +102,7 @@ namespace iRentApi.Service.Stripe
 
             var transfer = transfers.ToList().First();
 
-            var refundAmount = transfer.Amount / 3;
+            var refundAmount = transfer.Amount / 2;
 
             var options = new TransferReversalCreateOptions
             {

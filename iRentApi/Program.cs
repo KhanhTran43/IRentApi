@@ -100,6 +100,8 @@ app.MapControllers();
 
 app.UseHangfireDashboard();
 
+var timezone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+
 BackgroundJob.Enqueue<UpdateRentedWarehouseStatusJob>(x => x.Execute());
 RecurringJob.AddOrUpdate<UpdateRentedWarehouseStatusJob>(
     "daily-update-rented-warehouse-status-job",
@@ -107,7 +109,7 @@ RecurringJob.AddOrUpdate<UpdateRentedWarehouseStatusJob>(
     "0 0 * * *",
     new RecurringJobOptions()
     {
-        TimeZone = TimeZoneInfo.Local
+        TimeZone = timezone
     }
 );
 
