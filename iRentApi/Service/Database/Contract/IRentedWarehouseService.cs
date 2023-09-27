@@ -21,6 +21,7 @@ namespace iRentApi.Service.Database.Contract
         public abstract Task Confirm(long rentedWarehouseId);
         public abstract Task RequestCancel(long rentedWarehouseId);
         public abstract Task ConfirmCancel(long rentedWarehouseId);
+        public abstract Task Cancel(long rentedWarehouseId);
         public abstract Task ResolveAllStatus();
         public abstract VerifyContractResult VerifyContract(string hash, string key);
         public abstract Task ExtendRenting<TExtendRentingModel>(long rentedWarehouseID, TExtendRentingModel extend) where TExtendRentingModel : class, ICreateExtendRentingDTO;

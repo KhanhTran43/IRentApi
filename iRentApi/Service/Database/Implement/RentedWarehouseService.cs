@@ -90,6 +90,18 @@ namespace iRentApi.Service.Database.Implement
                 throw new InvalidOperationException("Invalid cancel confirm action");
         }
 
+        public override async Task Cancel(long rentedWarehouseId)
+        {
+            var rentedWarehouse = await Context.RentedWarehouseInfos.FindAsync(rentedWarehouseId) ?? throw new EntityNotFoundException();
+            if (rentedWarehouse.Status == RentedWarehouseStatus.Waiting)
+            {
+                rentedWarehouse.Status = RentedWarehouseStatus.Canceled;
+                Context.SaveChanges();
+            }
+            else
+                throw new InvalidOperationException("Invalid cancel action");
+        }
+
         public override async Task ResolveAllStatus()
         {
             var now = DateTime.Now.AtMidnight();

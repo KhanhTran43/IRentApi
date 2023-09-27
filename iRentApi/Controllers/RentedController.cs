@@ -110,12 +110,12 @@ namespace iRentApi.Controllers
                 if (!String.IsNullOrEmpty(rentedWarehouseInfo.DepositPayment))
                 {
                     var reverseTransfer = StripeService.Refund(rentedWarehouseInfo.DepositPayment);
-                    await Service.RentedWarehouseService.ConfirmCancel(rentedWarehouseId);
+                    await Service.RentedWarehouseService.Cancel(rentedWarehouseId);
                     return Ok($"Cancel Confirmed: {reverseTransfer}");
                 }
                 else
                 {
-                    await Service.RentedWarehouseService.ConfirmCancel(rentedWarehouseId);
+                    await Service.RentedWarehouseService.Cancel(rentedWarehouseId);
                     return Ok($"Cancel Confirmed");
                 }
             }
