@@ -87,7 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(options =>
 {
-    options.WithOrigins("http://localhost:4200", "http://localhost:4201", "https://irent-gamma.vercel.app", "https://irent-admin.vercel.app/#/warehouse").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+    options.WithOrigins("http://localhost:4200", "http://localhost:4201", "https://irent-gamma.vercel.app", "https://irent-admin.vercel.app").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
 });
 
 app.UseHttpsRedirection();
