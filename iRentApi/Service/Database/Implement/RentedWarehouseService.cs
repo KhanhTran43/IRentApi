@@ -116,7 +116,7 @@ namespace iRentApi.Service.Database.Implement
 
             var endedWarehouses = Context.RentedWarehouseInfos
             .Where(rwi => rwi.Status == RentedWarehouseStatus.Renting && rwi.EndDate.CompareTo(now) <= 0).ToList();
-            rentingWarehouses.ForEach(ew => ew.Status = RentedWarehouseStatus.Ended);
+            endedWarehouses.ForEach(ew => ew.Status = RentedWarehouseStatus.Ended);
 
             Context.SaveChanges();
         }
